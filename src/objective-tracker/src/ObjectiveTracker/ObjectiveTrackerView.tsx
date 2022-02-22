@@ -2,8 +2,6 @@ import { Button, Grid, TextField, Typography } from "@mui/material";
 import flatten from "lodash/flatten";
 import React, { useEffect, useRef, useState } from "react";
 import { GetObjectiveConditionBitsQuery } from "../queries/GetObjectiveConditionBitsQuery";
-import { GetObjectiveDataQuery } from "../queries/GetObjectiveDataQuery";
-import { GetObjectiveHeaderQuery } from "../queries/GetObjectiveHeaderQuery";
 import { QueryBuilder } from "../tracker/QueryBuilder";
 import { snesSession } from "../tracker/SnesSession";
 import {
@@ -11,12 +9,13 @@ import {
     ConditionBitResult,
     ConditionResponseData,
     ResponseData,
-    ObjectiveMetadata,
 } from "../types";
 import { sleep } from "../utils/sleep";
+import { ObjectiveTrackerState } from "./constants";
 import { convertObjectiveRomData } from "./convertRomData";
 import ObjectiveCondition from "./ObjectiveCondition";
 import ObjectiveTitle from "./ObjectiveTitle";
+import ObjectiveTrackerHeader from "./ObjectiveTrackerHeader";
 import "./ObjectiveTrackerView.css";
 
 type Props = Record<string, unknown>;
@@ -28,6 +27,9 @@ export function ObjectiveTrackerView(props: Props): JSX.Element {
     const [initialized, setInitialized] = useState(false);
     const [initializing, setInitializing] = useState(false);
     const [trackerData, setTrackerData] = useState<ResponseData | null>(null);
+    const [trackerState, setTrackerState] = useState<ObjectiveTrackerState>(
+        ObjectiveTrackerState.SELECT_FILE
+    );
     const [activeCondition, setActiveCondition] =
         useState<ConditionResponseData>();
     const [bitData, setBitData] = useState<Record<string, ConditionBitResult>>(
@@ -98,6 +100,7 @@ export function ObjectiveTrackerView(props: Props): JSX.Element {
             );
 
             setBitData(bitsResult);
+            setTrackerState(ObjectiveTrackerState.TRACKING);
             await sleep(5000);
             setSendRequest(sendRequest + 1);
         })();
@@ -122,6 +125,7 @@ export function ObjectiveTrackerView(props: Props): JSX.Element {
             setTrackerData({
                 objectiveData: val.map(convertObjectiveRomData),
             });
+            setTrackerState(ObjectiveTrackerState.FILE_SELECTED);
         };
         reader.onerror = function (evt) {
             console.error("there was an error", evt);
@@ -139,12 +143,28 @@ export function ObjectiveTrackerView(props: Props): JSX.Element {
 
     const startTracking = () => {
         setBeginTracking(true);
+        setTrackerState(ObjectiveTrackerState.START_TRACKING);
     };
+
+    const trackerMessage =
+        trackerState === ObjectiveTrackerState.SELECT_FILE
+            ? `1. Select a metadata file output by FF6WC`
+            : trackerState === ObjectiveTrackerState.FILE_SELECTED
+            ? `2. Select 'Begin Tracking'`
+            : "";
 
     return (
         <>
             <div>
-                <Grid container className="inner-dialogue-window">
+                <ObjectiveTrackerHeader
+                    message={trackerMessage}
+                    state={trackerState}
+                    onBeginTracking={startTracking}
+                    onFileSelect={onFileChange}
+                />
+            </div>
+            <div>
+                <Grid container className="inner-dialogue-window tracker-text">
                     {objectiveData.map((o, idx) => {
                         const bitResults = bitData;
                         const conditionData = o.conditions
@@ -231,8 +251,6 @@ export function ObjectiveTrackerView(props: Props): JSX.Element {
                     rows={10}
                     value={logs.current.join("\r\n")}
                 />
-                <input type="file" onChange={onFileChange} />
-                <Button onClick={startTracking}> Start Tracking </Button>
             </div>
         </>
     );

@@ -42,10 +42,12 @@
 }
 html {
     font-family: "ff6", monospace;
-    color: #ecedee;
     margin: 0px;
     padding: 0px;
     text-shadow: 1px 1px #2d2a4b;
+}
+.tracker-text {
+    color: #ecedee;
 }
 div {
 }
