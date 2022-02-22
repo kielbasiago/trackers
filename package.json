@@ -1,0 +1,23 @@
+{
+    "name": "@kielbasiago/root",
+    "version": "1.0.0",
+    "description": "root for objective tracker",
+    "private": true,
+    "workspaces": {
+        "packages": [
+            "src/objective-tracker"
+        ]
+    },
+    "scripts": {
+        "lint": "eslint . --ext .ts"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "eslint-plugin-react-hooks": "^4.2.0",
+        "lerna": "^4.0.0",
+        "prettier": "^2.3.0",
+        "rimraf": "^3.0.2"
+    },
+    "dependencies": {}
+}

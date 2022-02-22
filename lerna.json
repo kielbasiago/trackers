@@ -1,0 +1,4 @@
+{
+    "packages": ["src/objective-tracker", "src/ff6-types"],
+    "version": "1.0.0"
+}

@@ -1,0 +1,8 @@
+{
+    "New Pure Component": {
+        "scope": "typescript,typescriptreact",
+        "prefix": "makeStylesBoilerplate",
+        "body": ["const useStyles = makeStyles<Theme, Props, StyleClassKey>((theme) => ({", "", "}));"],
+        "description": "Export both a component function with typed props matching the filename"
+    }
+}
