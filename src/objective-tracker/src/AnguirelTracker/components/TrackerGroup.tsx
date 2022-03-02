@@ -30,6 +30,7 @@ const BaseContainer = styled.div`
     flex: 1;
     padding-left: 2px;
     padding-right: 2px;
+    position: relative;
     ${Object.keys(characterBackgrounds).map((c) => {
         const retVal = `&.group-${c} {
         background: ${characterBackgrounds[c]};
@@ -39,14 +40,11 @@ const BaseContainer = styled.div`
     })};
 `;
 
-const OuterContainer = styled(BaseContainer)`
-    z-index: 2;
-`;
+const OuterContainer = styled(BaseContainer)``;
 
 const NonGrouped = styled(BaseContainer)`
     flex: 1;
     display: flex;
-    z-index: 1;
 `;
 
 export const TrackerGroup: React.FC<Props> = (props) => {

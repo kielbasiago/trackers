@@ -2,65 +2,35 @@ import { Tooltip, Typography } from "@mui/material";
 import React from "react";
 import urljoin from "url-join";
 import { checkToAsset, FF6Character, FF6Event } from "../../types/ff6-types";
-import { DummyCell, LayoutCell, LayoutNumberCell } from "../layout";
+import { CharacterCell as CharCellType, LayoutCell, LayoutNumberCell } from "../layout";
 import { characterChecks, GetSaveDataResponse } from "../types";
-import { TrackerContext } from "./TrackerProvider";
+import { useTrackerContext } from "./TrackerProvider";
 import clsx from "clsx";
+import { RenderCell } from "./renderCell";
+import CharacterCell from "./cells/CharacterCell";
 
 type Props = {
-    cell: LayoutCell | LayoutNumberCell | DummyCell;
+    cell: LayoutCell | LayoutNumberCell;
 };
-const url = (str: string) => urljoin("https://kielbasa.s3.us-east-2.amazonaws.com/autotracker/images", `${str}.png`);
 
-function render(
-    key: string | null,
-    displayName: string,
-    className: string,
-    containerClassName: string,
-    adornment: React.ReactNode
-) {
-    if (!key) {
-        return <></>;
-    }
-    return (
-        <Tooltip title={displayName}>
-            <>
-                <span className={containerClassName} style={{ position: "relative", userSelect: "none" }}>
-                    <img
-                        id={`cell-${key}`}
-                        // style={{ marginLeft: 3, zIndex: 10 }}
-                        src={url(checkToAsset[key])}
-                        alt={key}
-                        className={className}
-                    />
-                </span>
-                <span className="adornment">{adornment}</span>
-            </>
-        </Tooltip>
-    );
-}
+/*
+    THREE CELL TYPES:
+    Character
+    Check
+    MultiCheck
+*/
 
 export function TrackerCell(props: Props): JSX.Element {
     const { cell } = props;
-    const data = React.useContext(TrackerContext);
+    const { data } = useTrackerContext();
 
     if (!data) {
         return <></>;
     }
 
-    const [key] = cell.value();
-
-    const cc = characterChecks;
-    const group = Object.keys(cc).find((character) => {
-        return key === character || cc[character as FF6Character].includes(key as FF6Event);
-    });
-
-    const charData = cc[key as FF6Character];
-    const isChar = !!charData;
-    const checkCount = charData?.length ?? null;
-    const completedCheckCount = charData?.filter((z) => data.allFlags[z]);
-
-    if (cell instanceof LayoutCell) {
+    if (cell instanceof CharCellType) {
+        return <CharacterCell cell={cell} />;
+    } else if (cell instanceof LayoutCell) {
         const [key, displayName, callback, gated] = cell.args;
 
         if (callback == null) {
@@ -72,7 +42,7 @@ export function TrackerCell(props: Props): JSX.Element {
 
         const isAvailable = gated ? gated(data as GetSaveDataResponse) : true;
 
-        return render(
+        return RenderCell(
             key,
             displayName,
             clsx(isAvailable || "gated-cell", completed || "inactive-cell", completed && "active-cell"),
@@ -88,16 +58,16 @@ export function TrackerCell(props: Props): JSX.Element {
 
         const className = clsx(isAvailable || "gated-cell", active || "inactive-cell", active && "active-cell");
 
-        const fontSize = isChar ? "1.8rem" : "2.2rem";
-        const adornmentValue = isChar ? checkCount : value;
+        const fontSize = "2.2rem";
+        const adornmentValue = value;
         const adornment =
-            value === 0 ? null : (
+            !isAvailable || value === 0 ? null : (
                 <div className={"overlay"}>
-                    <div className={clsx("overlay-content", `group-${group ?? "none"}`)}>
+                    <div className={clsx("overlay-content", "multicheck-cell-flex-end")}>
                         <Typography
                             variant="h6"
                             className={className}
-                            style={{ fontSize: fontSize, lineHeight: "normal" }}
+                            style={{ fontSize: fontSize, lineHeight: "22px" }}
                         >
                             {adornmentValue}
                         </Typography>
@@ -105,7 +75,7 @@ export function TrackerCell(props: Props): JSX.Element {
                 </div>
             );
 
-        return render(key, displayName, className, "", adornment);
+        return RenderCell(key, displayName, className, "", adornment);
     }
 
     return <></>;

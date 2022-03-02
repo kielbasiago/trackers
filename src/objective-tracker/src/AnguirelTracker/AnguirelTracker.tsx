@@ -9,7 +9,7 @@ import "./AnguirelTracker.css";
 import TrackerCell from "./components/TrackerCell";
 import TrackerHeader from "./components/TrackerHeader";
 import { TrackerCounts } from "./components/TrackerCounts";
-import { getDefaultTrackerData, TrackerContext, TrackerContextData } from "./components/TrackerProvider";
+import { useTrackerData, TrackerContext, TrackerContextData } from "./components/TrackerProvider";
 import TrackerRow from "./components/TrackerRow";
 import { layout } from "./layout";
 import TrackerGroup from "./components/TrackerGroup";
@@ -21,7 +21,8 @@ export function AnguirelTracker(props: Props): JSX.Element {
     const [qb, setQb] = useState<QueryBuilder>();
     const [initialized, setInitialized] = useState(false);
     const [initializing, setInitializing] = useState(false);
-    const [data, setData] = useState<TrackerContextData>(getDefaultTrackerData());
+    const trackerData = useTrackerData();
+    const { data, setData } = trackerData;
     const logs = useRef<Array<string>>([]);
     const [sendRequest, setSendRequest] = useState(0);
     const [____ignoreRenderVal, setRender] = useState(0);
@@ -61,10 +62,7 @@ export function AnguirelTracker(props: Props): JSX.Element {
                 })
             );
 
-            setData({
-                ...data,
-                ...dataResult,
-            });
+            setData(dataResult);
             // setBitData(bitsResult);
             await sleep(2000);
             setSendRequest(sendRequest + 1);
@@ -72,7 +70,7 @@ export function AnguirelTracker(props: Props): JSX.Element {
     }, [qb, initialized, sendRequest]);
 
     return (
-        <TrackerContext.Provider value={data}>
+        <TrackerContext.Provider value={trackerData}>
             <Paper style={{ width: 600, minWidth: 600, maxWidth: 600, padding: 8 }}>
                 <TrackerHeader />
                 <div style={{ position: "relative" }}>

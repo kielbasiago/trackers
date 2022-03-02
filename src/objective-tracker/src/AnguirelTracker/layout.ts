@@ -18,19 +18,23 @@ type LayoutNumberCellData = [Key, DisplayName, Callback, Callback?, NumberOption
 export class LayoutCell extends Tuple<LayoutCellData> {}
 export class LayoutNumberCell extends Tuple<LayoutNumberCellData> {}
 
-export class LayoutGroup extends Tuple<
-    [string, "flex-start" | "center" | "flex-end", Array<LayoutCell | LayoutNumberCell | DummyCell>]
-> {}
+export class CharacterCell extends LayoutNumberCell {
+    public checks: Array<string> = [];
+    public withChecks(checks: Array<string>) {
+        this.checks = checks;
+        return this;
+    }
+}
 
-// number is the size (between 0-1)
-// string is the group
-export class DummyCell extends Tuple<[number, string]> {}
+export class LayoutGroup extends Tuple<
+    [string, "flex-start" | "center" | "flex-end", Array<LayoutCell | LayoutNumberCell>]
+> {}
 
 const layout = [
     /*********************** ROW 1 ***********************/
     [
         new LayoutGroup("terra", "flex-start", [
-            new LayoutCell(
+            new CharacterCell(
                 "terra",
                 "terra",
                 ({ characters }) => characters.terra,
@@ -68,7 +72,6 @@ const layout = [
             ),
         ]),
         new LayoutGroup("setzer", "flex-end", [
-            new DummyCell(0.5, "setzer"),
             new LayoutCell(
                 "darill",
                 "darill",
@@ -81,7 +84,7 @@ const layout = [
                 ({ events }) => events.kohligen,
                 ({ characters }) => characters.setzer
             ),
-            new LayoutCell(
+            new CharacterCell(
                 "setzer",
                 "setzer",
                 ({ characters }) => characters.setzer,
@@ -92,7 +95,7 @@ const layout = [
     /*********************** ROW 2 ***********************/
     [
         new LayoutGroup("sabin", "flex-start", [
-            new LayoutCell(
+            new CharacterCell(
                 "sabin",
                 "sabin",
                 ({ characters }) => characters.sabin,
@@ -131,7 +134,6 @@ const layout = [
         ]),
 
         new LayoutGroup("gau", "flex-end", [
-            new DummyCell(1, "gau"),
             new LayoutCell(
                 "serpentTrench",
                 "serpentTrench",
@@ -144,7 +146,7 @@ const layout = [
                 ({ events }) => events.veldt,
                 ({ characters }) => characters.gau
             ),
-            new LayoutCell(
+            new CharacterCell(
                 "gau",
                 "gau",
                 ({ characters }) => characters.gau,
@@ -155,7 +157,7 @@ const layout = [
     [
         /*********************** ROW 3 ***********************/
         new LayoutGroup("celes", "flex-start", [
-            new LayoutCell(
+            new CharacterCell(
                 "celes",
                 "celes",
                 ({ characters }) => characters.celes,
@@ -185,7 +187,6 @@ const layout = [
                     max: 3,
                 }
             ),
-            new DummyCell(1, "celes"),
         ]),
 
         new LayoutGroup("none", "center", [
@@ -203,7 +204,6 @@ const layout = [
             ),
         ]),
         new LayoutGroup("edgar", "flex-end", [
-            new DummyCell(1, "edgar"),
             new LayoutCell(
                 "figaroThrone",
                 "figaroThrone",
@@ -222,7 +222,7 @@ const layout = [
                 ({ events }) => events.ancientCastle,
                 ({ characters }) => characters.edgar
             ),
-            new LayoutCell(
+            new CharacterCell(
                 "edgar",
                 "edgar",
                 ({ characters }) => characters.edgar,
@@ -233,7 +233,7 @@ const layout = [
     /*********************** ROW 4 ***********************/
     [
         new LayoutGroup("shadow", "flex-start", [
-            new LayoutCell(
+            new CharacterCell(
                 "shadow",
                 "shadow",
                 ({ characters }) => characters.shadow,
@@ -268,7 +268,6 @@ const layout = [
         ]),
 
         new LayoutGroup("none", "center", [
-            new DummyCell(1, "none"),
             new LayoutNumberCell(
                 "esperCount",
                 "esperCount",
@@ -280,7 +279,6 @@ const layout = [
                     max: 27,
                 }
             ),
-            new DummyCell(1, "none"),
         ]),
 
         new LayoutGroup("locke", "flex-end", [
@@ -302,7 +300,7 @@ const layout = [
                 ({ events }) => events.phoenixCave,
                 ({ characters }) => characters.locke
             ),
-            new LayoutCell(
+            new CharacterCell(
                 "locke",
                 "locke",
                 ({ characters }) => characters.locke,
@@ -313,7 +311,7 @@ const layout = [
     /*********************** ROW 5 ***********************/
     [
         new LayoutGroup("cyan", "flex-start", [
-            new LayoutCell(
+            new CharacterCell(
                 "cyan",
                 "cyan",
                 ({ characters }) => characters.cyan,
@@ -345,9 +343,7 @@ const layout = [
             ),
         ]),
         new LayoutGroup("none", "center", [
-            new DummyCell(1, "none"),
             new LayoutCell("atmaWeapon", "atmaWeapon", ({ events }) => events.atmaWeapon),
-            new DummyCell(1, "none"),
         ]),
         new LayoutGroup("strago", "flex-end", [
             new LayoutCell(
@@ -368,7 +364,7 @@ const layout = [
                 ({ events }) => events.fanaticsTower,
                 ({ characters }) => characters.strago
             ),
-            new LayoutCell(
+            new CharacterCell(
                 "strago",
                 "strago",
                 ({ characters }) => characters.strago,
@@ -379,7 +375,7 @@ const layout = [
     /*********************** ROW 6 ***********************/
     [
         new LayoutGroup("relm", "flex-start", [
-            new LayoutCell(
+            new CharacterCell(
                 "relm",
                 "relm",
                 ({ characters }) => characters.relm,
@@ -399,11 +395,8 @@ const layout = [
             ),
         ]),
         new LayoutGroup("none", "center", [
-            new DummyCell(1, "none"),
             new LayoutCell("kefkaAtNarshe", "kefkaAtNarshe", ({ events }) => events.kefkaAtNarshe, undefined),
             new LayoutCell("tzenThief", "tzenThief", ({ events }) => events.tzenThief, undefined),
-            new DummyCell(1, "none"),
-            new DummyCell(1, "none"),
         ]),
         new LayoutGroup("umaro", "flex-end", [
             new LayoutCell(
@@ -412,7 +405,7 @@ const layout = [
                 ({ events }) => events.umarosCave,
                 ({ characters }) => characters.umaro
             ),
-            new LayoutCell(
+            new CharacterCell(
                 "umaro",
                 "umaro",
                 ({ characters }) => characters.umaro,
@@ -423,7 +416,7 @@ const layout = [
     /*********************** ROW 7 ***********************/
     [
         new LayoutGroup("mog", "flex-start", [
-            new LayoutCell(
+            new CharacterCell(
                 "mog",
                 "mog",
                 ({ characters }) => characters.mog,
@@ -435,8 +428,6 @@ const layout = [
                 ({ events }) => events.loneWolf,
                 ({ characters }) => characters.mog
             ),
-            new DummyCell(1, "mog"),
-            new DummyCell(1, "mog"),
         ]),
         new LayoutGroup("none", "center", [
             new LayoutNumberCell(
@@ -455,15 +446,13 @@ const layout = [
             new LayoutCell("doomGaze", "doomGaze", ({ events }) => events.doomGaze),
         ]),
         new LayoutGroup("gogo", "flex-end", [
-            new DummyCell(1, "gogo"),
-            new DummyCell(1, "gogo"),
             new LayoutCell(
                 "zoneEater",
                 "zoneEater",
                 ({ events }) => events.zoneEater,
                 ({ characters }) => characters.gogo
             ),
-            new LayoutCell(
+            new CharacterCell(
                 "gogo",
                 "gogo",
                 ({ characters }) => characters.gogo,
@@ -474,8 +463,6 @@ const layout = [
     [
         /*********************** ROW 7 ***********************/
         new LayoutGroup("dragons", "center", [
-            new DummyCell(1, "none"),
-            new DummyCell(1, "none"),
             new LayoutCell("blueDragon", "blueDragon", ({ dragons }) => dragons.blueDragon),
             new LayoutCell("iceDragon", "iceDragon", ({ dragons }) => dragons.iceDragon),
             new LayoutCell("stormDragon", "stormDragon", ({ dragons }) => dragons.stormDragon),
@@ -484,10 +471,33 @@ const layout = [
             new LayoutCell("skullDragon", "skullDragon", ({ dragons }) => dragons.skullDragon),
             new LayoutCell("redDragon", "redDragon", ({ dragons }) => dragons.redDragon),
             new LayoutCell("whiteDragon", "whiteDragon", ({ dragons }) => dragons.whiteDragon),
-            new DummyCell(1, "none"),
-            new DummyCell(1, "none"),
         ]),
     ],
 ];
+
+type Cell = LayoutCell | LayoutNumberCell;
+export const getCell = (key: string) => {
+    const c = layout.reduce<Cell | null>((acc, groups, idx) => {
+        acc =
+            acc ||
+            groups.reduce<Cell | null>((acc, group, idx) => {
+                const cells = group.args[2];
+                acc =
+                    acc ||
+                    cells.reduce<Cell | null>((acc, cell, idx) => {
+                        if (cell.args[0] === key) {
+                            return cell;
+                        }
+                        return acc;
+                    }, null);
+
+                return acc;
+            }, null);
+
+        return acc;
+    }, null);
+
+    return c;
+};
 
 export { layout };

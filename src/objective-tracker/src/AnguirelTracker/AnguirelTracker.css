@@ -24,7 +24,8 @@ img {
 }
 
 .inactive-cell {
-    filter: brightness(50%) grayscale(65%);
+    opacity: 0.8;
+    filter: brightness(50%) grayscale(100%);
 }
 
 .gated-cell {
@@ -33,19 +34,27 @@ img {
     filter: brightness(30%) grayscale(100%);
 }
 
-.adornment {
-    position: relative;
-}
-
 .overlay {
+    position: absolute;
     width: 100%;
     height: 100%;
+    z-index: 10;
 }
 
 .overlay-content {
     position: absolute;
-    font-weight: 500;
-    bottom: 0;
-    right: 0;
-    line-height: normal;
+    bottom: 68px;
+    padding: 1px;
+}
+
+.multicheck-cell-incomplete {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.multicheck-cell-flex-start {
+    left: 1px;
+}
+
+.multicheck-cell-flex-end {
+    right: 1px;
 }
