@@ -28,6 +28,8 @@ const characterBackgrounds: Record<string, string> = {
 const BaseContainer = styled.div`
     display: flex;
     flex: 1;
+    padding-left: 2px;
+    padding-right: 2px;
     ${Object.keys(characterBackgrounds).map((c) => {
         const retVal = `&.group-${c} {
         background: ${characterBackgrounds[c]};

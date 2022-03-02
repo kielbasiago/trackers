@@ -54,7 +54,11 @@ export function TrackerCell(props: Props): JSX.Element {
     const group = Object.keys(cc).find((character) => {
         return key === character || cc[character as FF6Character].includes(key as FF6Event);
     });
-    // const groupClass = `group-${group ?? "none"}`;
+
+    const charData = cc[key as FF6Character];
+    const isChar = !!charData;
+    const checkCount = charData?.length ?? null;
+    const completedCheckCount = charData?.filter((z) => data.allFlags[z]);
 
     if (cell instanceof LayoutCell) {
         const [key, displayName, callback, gated] = cell.args;
@@ -84,12 +88,18 @@ export function TrackerCell(props: Props): JSX.Element {
 
         const className = clsx(isAvailable || "gated-cell", active || "inactive-cell", active && "active-cell");
 
+        const fontSize = isChar ? "1.8rem" : "2.2rem";
+        const adornmentValue = isChar ? checkCount : value;
         const adornment =
             value === 0 ? null : (
                 <div className={"overlay"}>
                     <div className={clsx("overlay-content", `group-${group ?? "none"}`)}>
-                        <Typography variant="h6" className={className} style={{ fontSize: "2.2rem" }}>
-                            {value}
+                        <Typography
+                            variant="h6"
+                            className={className}
+                            style={{ fontSize: fontSize, lineHeight: "normal" }}
+                        >
+                            {adornmentValue}
                         </Typography>
                     </div>
                 </div>
