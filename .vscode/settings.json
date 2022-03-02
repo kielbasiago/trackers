@@ -11,6 +11,7 @@
     "emmet.showExpandedAbbreviation": "never",
     "editor.suggestSelection": "first",
     "prettier.tabWidth": 4,
+    "prettier.printWidth": 120,
 
     "[json]": {
         "editor.formatOnSave": true,

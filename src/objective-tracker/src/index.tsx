@@ -17,7 +17,8 @@ import Checkbox from "@mui/material/Checkbox";
 import { theme } from "./theme/theme";
 import ThemeProvider from "@mui/system/ThemeProvider";
 import styled from "@emotion/styled";
-import AnguirelTracker from "./AnguirelTracker/AnguirelTracker";
+import CircularProgress from "@mui/material/CircularProgress";
+const AnguirelTracker = React.lazy(() => import("./AnguirelTracker/AnguirelTracker"));
 
 const Container = styled.div`
     .highcharts-credits {
@@ -40,10 +41,7 @@ const Test = () => {
     useEffect(() => {
         const XP_PER_LEVEL = 230;
         const GET_MONSTER_LEVEL = (idx: number) => Math.floor(idx * 1.5);
-        const xpData = times(
-            99,
-            (idx) => XP_PER_LEVEL * GET_MONSTER_LEVEL(idx + 1)
-        );
+        const xpData = times(99, (idx) => XP_PER_LEVEL * GET_MONSTER_LEVEL(idx + 1));
         const data = rawdata;
         // const data = rawdata.map((item, index) => {
         //     const previousItem = rawdata[index - 1];
@@ -124,9 +122,7 @@ const Test = () => {
             responsive: {
                 rules: [
                     {
-                        condition: {
-                            maxWidth: 500,
-                        },
+                        condition: {},
                         chartOptions: {
                             legend: {
                                 layout: "horizontal",
@@ -165,14 +161,13 @@ const Test = () => {
 ReactDOM.render(
     <React.StrictMode>
         <ThemeProvider theme={theme}>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<ObjectiveTrackerView />} />
-                    <Route path="/foo" element={<App />} />
-                    <Route path="/test" element={<Test />} />
-                    <Route path="/tracker" element={<AnguirelTracker />} />
-                </Routes>
-            </BrowserRouter>
+            <React.Suspense fallback={() => <CircularProgress size={20} />}>
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="/" element={<AnguirelTracker />} />
+                    </Routes>
+                </BrowserRouter>
+            </React.Suspense>
         </ThemeProvider>
     </React.StrictMode>,
     document.getElementById("root")

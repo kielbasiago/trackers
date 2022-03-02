@@ -1,5 +1,5 @@
 import startCase from "lodash/startCase";
-import { FF6Events } from "../types/ff6-types";
+import { FF6Event } from "../types/ff6-types";
 
 export interface ITrackedCheck {
     name: string;
@@ -7,11 +7,11 @@ export interface ITrackedCheck {
 }
 
 export class TrackedCheck {
-    public readonly key: keyof FF6Events;
+    public readonly key: FF6Event;
     public readonly name: string;
     public readonly complete: boolean;
 
-    constructor(name: keyof FF6Events, completed: boolean) {
+    constructor(name: FF6Event, completed: boolean) {
         this.key = name;
         this.name = startCase(name);
         this.complete = completed;

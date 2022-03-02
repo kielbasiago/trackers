@@ -53,226 +53,399 @@ export enum FF6StatusFour {
     Float = 0x80,
 }
 
-/** Character flagged enum */
-export const FF6CharacterEventIdChunkOne = {
-    TERRA: 0x01,
-    LOCKE: 0x02,
-    CYAN: 0x04,
-    SHADOW: 0x08,
-    EDGAR: 0x10,
-    SABIN: 0x20,
-    CELES: 0x40,
-    STRAGO: 0x80,
-};
+export type FF6Dragon =
+    // specific boss (order is based by id here)
+    | "iceDragon"
+    | "stormDragon"
+    | "dirtDragon"
+    | "goldDragon"
+    | "skullDragon"
+    | "blueDragon"
+    | "redDragon"
+    | "whiteDragon"
+    // by location (order matches vanilla spawn locations above, by id)
+    | "narsheDragon"
+    | "mtZozoDragon"
+    | "operaHouseDragon"
+    | "kefkaTowerMidDragon"
+    | "kefkaTowerRightDragon"
+    | "ancientCastleDragon"
+    | "phoenixCaveDragon"
+    | "fanaticsTowerDragon";
 
-export const FF6CharacterEventIdChunkTwo = {
-    RELM: 0x01,
-    SETZER: 0x02,
-    MOG: 0x04,
-    GAU: 0x08,
-    GOGO: 0x10,
-    UMARO: 0x20,
-};
+export type FF6DragonFlags = Record<FF6Dragon, boolean>;
 
-export type FF6Events = {
+export const ff6Dragons = {
+    iceDragon: "iceDragon",
+    stormDragon: "stormDragon",
+    dirtDragon: "dirtDragon",
+    goldDragon: "goldDragon",
+    skullDragon: "skullDragon",
+    blueDragon: "blueDragon",
+    redDragon: "redDragon",
+    whiteDragon: "whiteDragon",
+    narsheDragon: "narsheDragon",
+    mtZozoDragon: "mtZozoDragon",
+    operaHouseDragon: "operaHouseDragon",
+    kefkaTowerMidDragon: "kefkaTowerMidDragon",
+    kefkaTowerRightDragon: "kefkaTowerRightDragon",
+    ancientCastleDragon: "ancientCastleDragon",
+    phoenixCaveDragon: "phoenixCaveDragon",
+    fanaticsTowerDragon: "fanaticsTowerDragon",
+};
+export type FF6Event =
     /** Global checks */
-    doomGaze: boolean;
-    tritoch: boolean;
-    tzenThief: boolean;
-    veldt: boolean;
-    auctionHouse1: boolean;
-    auctionHouse2: boolean;
-    kefkaAtNarshe: boolean;
-
+    | "doomGaze"
+    | "tritoch"
+    | "tzenThief"
+    | "veldt"
+    | "auctionHouse1"
+    | "auctionHouse2"
+    | "kefkaAtNarshe"
     /** Terra checks */
-    whelk: boolean;
-    leteRiver: boolean;
-    sealedGate: boolean;
-    mobliz: boolean;
-    ramuh: boolean;
-
+    | "whelk"
+    | "leteRiver"
+    | "sealedGate"
+    | "mobliz"
+    | "ramuh"
     /** Locke checks */
-    narsheWeaponShop: boolean;
-    phoenixCave: boolean;
-    tunnelArmor: boolean;
-
+    | "narsheWeaponShop"
+    | "phoenixCave"
+    | "tunnelArmor"
     /** Setzer checks */
-    kohligen: boolean;
-    darill: boolean;
-
+    | "kohligen"
+    | "darill"
     /** Sabin checks */
-    barenFalls: boolean;
-    imperialCamp: boolean;
-    mountKoltz: boolean;
-    phantomTrain: boolean;
-    collapsingHouse: boolean;
-
+    | "barenFalls"
+    | "imperialCamp"
+    | "mtKoltz"
+    | "phantomTrain"
+    | "collapsingHouse"
     /** Celes checks */
-    operaHouse: boolean;
-    magitek1: boolean;
-    magitek2: boolean;
-    magitek3: boolean;
-    chainedCeles: boolean;
-
+    | "operaHouse"
+    | "magitek1"
+    | "magitek2"
+    | "magitek3"
+    | "chainedCeles"
     /** Shadow checks */
-    gauManor: boolean;
-    veldtCave: boolean;
-    floatingContinent1: boolean;
-    floatingContinent2: boolean;
-    floatingContinent3: boolean;
-
+    | "gauManor"
+    | "veldtCave"
+    | "floatingContinent1"
+    | "floatingContinent2"
+    | "floatingContinent3"
     /** Cyan checks */
-    doma: boolean;
-    mtZozo: boolean;
-    nightmare1: boolean;
-    nightmare2: boolean;
-    nightmare3: boolean;
-
+    | "doma"
+    | "mtZozo"
+    | "nightmare1"
+    | "nightmare2"
+    | "nightmare3"
     /** Relm checks */
-    esperMountain: boolean;
-    owzersMansion: boolean;
-
+    | "esperMountain"
+    | "owzersMansion"
     /** Strago checks */
-    burningHouse: boolean;
-    ebotsRock: boolean;
-    fanaticsTower: boolean;
-
+    | "burningHouse"
+    | "ebotsRock"
+    | "fanaticsTower"
     /** Mog checks */
-    loneWolf: boolean;
-
+    | "loneWolf"
     /** Edgar checks */
-    figaroThrone: boolean;
-    figaroCastleEngineRoom: boolean;
-    ancientCastle: boolean;
-
+    | "figaroThrone"
+    | "figaroCastleEngineRoom"
+    | "ancientCastle"
     /** Gogo checks */
-    zoneEater: boolean;
-
+    | "zoneEater"
     /** Umaro checks */
-    umarosCave: boolean;
-
+    | "umarosCave"
     /** Gau checks */
-    serpentTrench: boolean;
-
+    | "serpentTrench"
     /** Kefka's Tower */
-    atmaWeapon: boolean;
+    | "atmaWeapon";
+
+export const ff6Events = {
+    /** Global checks */
+    doomGaze: "doomGaze",
+    tritoch: "tritoch",
+    tzenThief: "tzenThief",
+    veldt: "veldt",
+    auctionHouse1: "auctionHouse1",
+    auctionHouse2: "auctionHouse2",
+    kefkaAtNarshe: "kefkaAtNarshe",
+    /** Terra checks */
+    whelk: "whelk",
+    leteRiver: "leteRiver",
+    sealedGate: "sealedGate",
+    mobliz: "mobliz",
+    ramuh: "ramuh",
+    /** Locke checks */
+    narsheWeaponShop: "narsheWeaponShop",
+    phoenixCave: "phoenixCave",
+    tunnelArmor: "tunnelArmor",
+    /** Setzer checks */
+    kohligen: "kohligen",
+    darill: "darill",
+    /** Sabin checks */
+    barenFalls: "barenFalls",
+    imperialCamp: "imperialCamp",
+    mtKoltz: "mtKoltz",
+    phantomTrain: "phantomTrain",
+    collapsingHouse: "collapsingHouse",
+    /** Celes checks */
+    operaHouse: "operaHouse",
+    magitek1: "magitek1",
+    magitek2: "magitek2",
+    magitek3: "magitek3",
+    chainedCeles: "chainedCeles",
+    /** Shadow checks */
+    gauManor: "gauManor",
+    veldtCave: "veldtCave",
+    floatingContinent1: "floatingContinent1",
+    floatingContinent2: "floatingContinent2",
+    floatingContinent3: "floatingContinent3",
+    /** Cyan checks */
+    doma: "doma",
+    mtZozo: "mtZozo",
+    nightmare1: "nightmare1",
+    nightmare2: "nightmare2",
+    nightmare3: "nightmare3",
+    /** Relm checks */
+    esperMountain: "esperMountain",
+    owzersMansion: "owzersMansion",
+    /** Strago checks */
+    burningHouse: "burningHouse",
+    ebotsRock: "ebotsRock",
+    fanaticsTower: "fanaticsTower",
+    /** Mog checks */
+    loneWolf: "loneWolf",
+    /** Edgar checks */
+    figaroThrone: "figaroThrone",
+    figaroCastleEngineRoom: "figaroCastleEngineRoom",
+    ancientCastle: "ancientCastle",
+    /** Gogo checks */
+    zoneEater: "zoneEater",
+    /** Umaro checks */
+    umarosCave: "umarosCave",
+    /** Gau checks */
+    serpentTrench: "serpentTrench",
+    /** Kefka's Tower */
+    atmaWeapon: "atmaWeapon",
+};
+export type FF6EventFlags = Record<FF6Event, boolean>;
+
+export type FF6Esper =
+    | "ramuh"
+    | "ifrit"
+    | "shiva"
+    | "siren"
+    | "terrato"
+    | "shoat"
+    | "maduin"
+    | "bismark"
+    | "stray"
+    | "palidor"
+    | "tritoch"
+    | "odin"
+    | "raiden"
+    | "bahamut"
+    | "alexandr"
+    | "crusader"
+    | "ragnarok"
+    | "kirin"
+    | "zoneSeek"
+    | "carbunkl"
+    | "phantom"
+    | "sraphim"
+    | "golem"
+    | "unicorn"
+    | "fenrir"
+    | "starlet"
+    | "phoenix";
+
+export type FF6EsperFlags = Record<FF6Esper, boolean>;
+
+export const ff6Characters = {
+    terra: "terra",
+    locke: "locke",
+    cyan: "cyan",
+    shadow: "shadow",
+    edgar: "edgar",
+    sabin: "sabin",
+    celes: "celes",
+    strago: "strago",
+    relm: "relm",
+    setzer: "setzer",
+    mog: "mog",
+    gau: "gau",
+    gogo: "gogo",
+    umaro: "umaro",
 };
 
-export type FF6Esper = {};
+export type FF6Character =
+    | "terra"
+    | "locke"
+    | "cyan"
+    | "shadow"
+    | "edgar"
+    | "sabin"
+    | "celes"
+    | "strago"
+    | "relm"
+    | "setzer"
+    | "mog"
+    | "gau"
+    | "gogo"
+    | "umaro";
 
-export enum FF6Character {
-    TERRA = 0x00,
-    LOCKE = 0x01,
-    CYAN = 0x02,
-    SHADOW = 0x03,
-    EDGAR = 0x04,
-    SABIN = 0x05,
-    CELES = 0x06,
-    STRAGO = 0x07,
-    RELM = 0x08,
-    SETZER = 0x09,
-    MOG = 0x0a,
-    GAU = 0x0b,
-    GOGO = 0x0c,
-    UMARO = 0x0d,
+const ESPER_COUNT = 27;
+
+export const esperIds = Array.from(Array(ESPER_COUNT).keys());
+
+const [
+    RAMUH,
+    IFRIT,
+    SHIVA,
+    SIREN,
+    TERRATO,
+    SHOAT,
+    MADUIN,
+    BISMARK,
+    STRAY,
+    PALIDOR,
+    TRITOCH,
+    ODIN,
+    RAIDEN,
+    BAHAMUT,
+    ALEXANDR,
+    CRUSADER,
+    RAGNAROK,
+    KIRIN,
+    ZONESEEK,
+    CARBUNKL,
+    PHANTOM,
+    SRAPHIM,
+    GOLEM,
+    UNICORN,
+    FENRIR,
+    STARLET,
+    PHOENIX,
+] = esperIds;
+
+/** Whether or not a given character is available */
+export type FF6CharacterFlags = Record<FF6Character, boolean>;
+
+export enum FF6CharacterIds {
+    terra = 0x00,
+    locke = 0x01,
+    cyan = 0x02,
+    shadow = 0x03,
+    edgar = 0x04,
+    sabin = 0x05,
+    celes = 0x06,
+    strago = 0x07,
+    relm = 0x08,
+    setzer = 0x09,
+    mog = 0x0a,
+    gau = 0x0b,
+    gogo = 0x0c,
+    umaro = 0x0d,
 }
 
-// export const checkToAsset: Record<keyof FF6Events, string> = {
-//     atmaWeapon: "AtmaWpn",
-//     auctionHouse1: "Auctioneer",
-//     auctionHouse2: "Auctioneer",
-//     // terra
-//     leteRiver: "Ultros",
-//     sealedGate: "Maduin",
-//     mobliz: "Phunbaba",
-//     //sabin
-//     barenFalls: "Rizopas",
-//     imperialCamp: "MilEnc",
-//     mountKoltz: "Vargas",
-//     phantomTrain: "GhostTrain",
-//     collapsingHouse: "TzenHouse",
-//     //celes
-//     operaHouse: "Weight",
-//     magitek1: "Crane",
-//     magitek2: "Crane",
-//     magitek3: "Crane",
+export const checkToAsset: Record<string, string> = {
+    //characters
+    terra: "PrtTerra",
+    locke: "PrtLocke",
+    cyan: "PrtCyan",
+    shadow: "PrtShadow",
+    edgar: "PrtEdgar",
+    sabin: "PrtSabin",
+    celes: "PrtCeles",
+    strago: "PrtStrago",
+    relm: "PrtRelm",
+    setzer: "PrtSetzer",
+    mog: "PrtMog",
+    gau: "PrtGau",
+    gogo: "PrtGogo",
+    umaro: "PrtUmaro",
 
-//     nightmare1: "Wrexsoul",
-//     nightmare2: "Wrexsoul",
-//     nightmare3: "Wrexsoul",
+    charCount: "Char",
+    esperCount: "Esper",
 
-//         /** Global checks */
-//         doomGaze: boolean;
-//         tritoch: boolean;
-//         tzenThief: boolean;
-//         veldt: boolean;
-//         auctionHouse1: boolean;
-//         auctionHouse2: boolean;
-//         kefkaAtNarshe: boolean;
+    // terra
+    leteRiver: "Ultros",
+    sealedGate: "Maduin",
+    mobliz: "Phunbaba",
+    whelk: "Whelk",
+    ramuh: "Ramuh",
 
-//         /** Terra checks */
-//         whelk: boolean;
-//         leteRiver: boolean;
-//         sealedGate: boolean;
-//         mobliz: boolean;
-//         ramuh: boolean;
+    //sabin
+    barenFalls: "Rizopas",
+    imperialCamp: "MilEnc",
+    mtKoltz: "Vargas",
+    phantomTrain: "GhostTrain",
+    collapsingHouse: "TzenHouse",
+    //celes
+    operaHouse: "Weight",
+    magitek: "Crane",
+    chainedCeles: "ChainedCeles",
+    //shadow
+    gauManor: "GauDad",
+    floatingContinent: "ShadowYump",
+    veldtCave: "SrBehemoth",
 
-//         /** Locke checks */
-//         narsheWeaponShop: boolean;
-//         phoenixCave: boolean;
-//         tunnelArmor: boolean;
+    //cyan
+    doma: "Captain",
+    nightmare: "Wrexsoul",
+    mtZozo: "Roses",
 
-//         /** Setzer checks */
-//         kohligen: boolean;
-//         darill: boolean;
+    //relm
+    esperMountain: "GoddessStatue",
+    owzersMansion: "Chadarnook",
 
-//         /** Celes checks */
-//         operaHouse: boolean;
-//         magitek1: boolean;
-//         magitek2: boolean;
-//         magitek3: boolean;
-//         chainedCeles: boolean;
+    //mog
+    loneWolf: "LoneWolf",
 
-//         /** Shadow checks */
-//         gauManor: boolean;
-//         veldtCave: boolean;
-//         floatingContinent1: boolean;
-//         floatingContinent2: boolean;
-//         floatingContinent3: boolean;
+    //setzer
+    kohligen: "InterceptorKohlingen",
+    darill: "Dullahan",
 
-//         /** Cyan checks */
-//         doma: boolean;
-//         mtZozo: boolean;
-//         nightmare1: boolean;
-//         nightmare2: boolean;
-//         nightmare3: boolean;
+    //gau
+    serpentTrench: "DiveHelm",
+    veldt: "GauJerky",
 
-//         /** Relm checks */
-//         esperMountain: boolean;
-//         owzersMansion: boolean;
+    //edgar
+    figaroThrone: "FigaroThrone",
+    figaroCastleEngineRoom: "Tentacle",
+    ancientCastle: "Raiden",
 
-//         /** Strago checks */
-//         burningHouse: boolean;
-//         ebotsRock: boolean;
-//         fanaticsTower: boolean;
+    //locke
+    tunnelArmor: "TunnelArmor",
+    narsheWeaponShop: "Narshe_Wpn",
+    phoenixCave: "Phoenix",
 
-//         /** Mog checks */
-//         loneWolf: boolean;
+    //strago
+    burningHouse: "FlameEater",
+    ebotsRock: "Hidon",
+    fanaticsTower: "MageMaster",
 
-//         /** Edgar checks */
-//         figaroThrone: boolean;
-//         figaroCastleEngineRoom: boolean;
-//         ancientCastle: boolean;
+    //umaro
+    umarosCave: "Umaro",
 
-//         /** Gogo checks */
-//         zoneEater: boolean;
+    //gogo
+    zoneEater: "ZoneEater",
 
-//         /** Umaro checks */
-//         umarosCave: boolean;
+    //ungated
+    kefkaAtNarshe: "Kefka",
+    tzenThief: "TzenThief",
+    auctionHouse: "Auctioneer",
+    atmaWeapon: "AtmaWpn",
+    tritoch: "Tritoch",
+    doomGaze: "DoomGaze",
 
-//         /** Gau checks */
-//         serpentTrench: boolean;
-
-//         /** Kefka's Tower */
-//         atmaWeapon: boolean;
-// }
+    iceDragon: "IceDragon",
+    stormDragon: "StormDragon",
+    dirtDragon: "DirtDragon",
+    goldDragon: "GoldDragon",
+    skullDragon: "SkullDragon",
+    blueDragon: "BlueDragon",
+    redDragon: "RedDragon",
+    whiteDragon: "WhiteDragon",
+};

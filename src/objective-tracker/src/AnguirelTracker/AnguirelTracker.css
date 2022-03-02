@@ -12,3 +12,30 @@
     font-weight: normal;
     font-style: normal;
 }
+
+.adornment,
+img {
+    user-select: none;
+}
+
+#cell-shadow.gated-cell {
+    opacity: 30%;
+    filter: brightness(0%);
+}
+
+.inactive-cell {
+    filter: brightness(50%) grayscale(65%);
+}
+
+.gated-cell {
+    /* filter: grayscale(100%); */
+    opacity: 0.3;
+    filter: brightness(30%) grayscale(100%);
+}
+
+.overlay-content {
+    position: absolute;
+    font-weight: 500;
+    bottom: -13px;
+    right: 4px;
+}

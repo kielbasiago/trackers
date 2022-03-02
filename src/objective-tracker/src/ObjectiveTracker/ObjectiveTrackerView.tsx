@@ -4,12 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { GetObjectiveConditionBitsQuery } from "../queries/GetObjectiveConditionBitsQuery";
 import { QueryBuilder } from "../tracker/QueryBuilder";
 import { snesSession } from "../tracker/SnesSession";
-import {
-    ConditionAddressInfo,
-    ConditionBitResult,
-    ConditionResponseData,
-    ResponseData,
-} from "../types";
+import { ConditionAddressInfo, ConditionBitResult, ConditionResponseData, ResponseData } from "../types";
 import { sleep } from "../utils/sleep";
 import { ObjectiveTrackerState } from "./constants";
 import { convertObjectiveRomData } from "./convertRomData";
@@ -27,21 +22,15 @@ export function ObjectiveTrackerView(props: Props): JSX.Element {
     const [initialized, setInitialized] = useState(false);
     const [initializing, setInitializing] = useState(false);
     const [trackerData, setTrackerData] = useState<ResponseData | null>(null);
-    const [trackerState, setTrackerState] = useState<ObjectiveTrackerState>(
-        ObjectiveTrackerState.SELECT_FILE
-    );
-    const [activeCondition, setActiveCondition] =
-        useState<ConditionResponseData>();
-    const [bitData, setBitData] = useState<Record<string, ConditionBitResult>>(
-        {}
-    );
+    const [trackerState, setTrackerState] = useState<ObjectiveTrackerState>(ObjectiveTrackerState.SELECT_FILE);
+    const [activeCondition, setActiveCondition] = useState<ConditionResponseData>();
+    const [bitData, setBitData] = useState<Record<string, ConditionBitResult>>({});
     const [beginTracking, setBeginTracking] = useState<boolean>(false);
     const logs = useRef<Array<string>>([]);
     const [sendRequest, setSendRequest] = useState(0);
     const [____ignoreRenderVal, setRender] = useState(0);
 
-    const activeConditionResult =
-        bitData[activeCondition?.conditionDescription as string];
+    const activeConditionResult = bitData[activeCondition?.conditionDescription as string];
 
     useEffect(() => {
         if (session && !qb) {
@@ -91,12 +80,10 @@ export function ObjectiveTrackerView(props: Props): JSX.Element {
             );
 
             const bitsResult = await qb?.send(
-                new GetObjectiveConditionBitsQuery(conditionData).setLogger(
-                    (...msgs) => {
-                        logs.current.push(...msgs);
-                        setRender(Math.random());
-                    }
-                )
+                new GetObjectiveConditionBitsQuery(conditionData).setLogger((...msgs) => {
+                    logs.current.push(...msgs);
+                    setRender(Math.random());
+                })
             );
 
             setBitData(bitsResult);
@@ -133,9 +120,7 @@ export function ObjectiveTrackerView(props: Props): JSX.Element {
     };
 
     useEffect(() => {
-        const data = window.localStorage.getItem(
-            `objective-tracker--last-file`
-        );
+        const data = window.localStorage.getItem(`objective-tracker--last-file`);
         if (data) {
             convertObjectiveRomData(JSON.parse(data));
         }
@@ -150,7 +135,7 @@ export function ObjectiveTrackerView(props: Props): JSX.Element {
         trackerState === ObjectiveTrackerState.SELECT_FILE
             ? `1. Select a metadata file output by FF6WC`
             : trackerState === ObjectiveTrackerState.FILE_SELECTED
-            ? `2. Select 'Begin Tracking'`
+            ? `2. Select 'Start Tracking'`
             : "";
 
     return (
@@ -170,28 +155,21 @@ export function ObjectiveTrackerView(props: Props): JSX.Element {
                         const conditionData = o.conditions
                             .map(
                                 // true be told i forget which one is the key here lol. Condition description is an awful prop name
-                                (z) =>
-                                    bitResults[z.conditionDescription || ""] ||
-                                    bitResults[z.name]
+                                (z) => bitResults[z.conditionDescription || ""] || bitResults[z.name]
                             )
                             .filter((z) => !!z);
                         const totalConditions = o.totalConditions;
                         const requiredConditions = o.requiredConditions;
                         const description = o.key;
-                        const completedConditions = conditionData.reduce(
-                            (acc, val) => {
-                                if (val.isComplete) {
-                                    return acc + 1;
-                                }
-                                return acc;
-                            },
-                            0
-                        );
+                        const completedConditions = conditionData.reduce((acc, val) => {
+                            if (val.isComplete) {
+                                return acc + 1;
+                            }
+                            return acc;
+                        }, 0);
 
                         const isComplete =
-                            o.requiredConditions === 0
-                                ? true
-                                : completedConditions / requiredConditions >= 1;
+                            o.requiredConditions === 0 ? true : completedConditions / requiredConditions >= 1;
 
                         return (
                             <>
@@ -213,13 +191,9 @@ export function ObjectiveTrackerView(props: Props): JSX.Element {
                                     <Typography variant="h6" color="inherit">
                                         <ObjectiveTitle
                                             index={idx}
-                                            completedConditions={
-                                                completedConditions
-                                            }
+                                            completedConditions={completedConditions}
                                             name={description}
-                                            requiredConditions={
-                                                requiredConditions
-                                            }
+                                            requiredConditions={requiredConditions}
                                             totalConditions={totalConditions}
                                         />
                                     </Typography>
@@ -228,11 +202,7 @@ export function ObjectiveTrackerView(props: Props): JSX.Element {
                                             key={cidx}
                                             condition={z}
                                             objective={o}
-                                            conditionBitResult={
-                                                bitData[
-                                                    z.conditionDescription as string
-                                                ]
-                                            }
+                                            conditionBitResult={bitData[z.conditionDescription as string]}
                                             onClick={() => onConditionClick(z)}
                                         />
                                     ))}
@@ -242,15 +212,7 @@ export function ObjectiveTrackerView(props: Props): JSX.Element {
                     })}
                 </Grid>
 
-                <TextField
-                    style={{ padding: 16 }}
-                    disabled
-                    multiline
-                    fullWidth
-                    maxRows={10}
-                    rows={10}
-                    value={logs.current.join("\r\n")}
-                />
+                <TextField disabled multiline fullWidth rows={10} value={logs.current.join("\r\n")} />
             </div>
         </>
     );

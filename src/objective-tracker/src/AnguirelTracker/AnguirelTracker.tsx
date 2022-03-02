@@ -1,28 +1,27 @@
-import { TextField } from "@mui/material";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Paper, TextField } from "@mui/material";
+import flatten from "lodash/flatten";
+import React, { useEffect, useRef, useState } from "react";
 import { GetSaveDataQuery } from "../queries/GetSaveDataQuery";
 import { QueryBuilder } from "../tracker/QueryBuilder";
 import { snesSession } from "../tracker/SnesSession";
 import { sleep } from "../utils/sleep";
 import "./AnguirelTracker.css";
-import Check from "./Check";
-import { characterChecks, GetSaveDataResponse } from "./types";
-import urljoin from "url-join";
-import { TrackedCharacter } from "./TrackedCharacter";
-import { FF6Character, FF6Events } from "../types/ff6-types";
-import { TrackedCheck } from "./TrackedCheck";
-import startCase from "lodash/startCase";
-import { TrackerRow } from "./TrackerRow";
+import TrackerCell from "./components/TrackerCell";
+import TrackerHeader from "./components/TrackerHeader";
+import { TrackerCounts } from "./components/TrackerCounts";
+import { getDefaultTrackerData, TrackerContext, TrackerContextData } from "./components/TrackerProvider";
+import TrackerRow from "./components/TrackerRow";
+import { layout } from "./layout";
+import TrackerGroup from "./components/TrackerGroup";
 
 type Props = Record<string, unknown>;
 
 export function AnguirelTracker(props: Props): JSX.Element {
-    const {} = props;
     const [session] = useState(snesSession);
     const [qb, setQb] = useState<QueryBuilder>();
     const [initialized, setInitialized] = useState(false);
     const [initializing, setInitializing] = useState(false);
-    const [data, setData] = useState<GetSaveDataResponse | null>(null);
+    const [data, setData] = useState<TrackerContextData>(getDefaultTrackerData());
     const logs = useRef<Array<string>>([]);
     const [sendRequest, setSendRequest] = useState(0);
     const [____ignoreRenderVal, setRender] = useState(0);
@@ -62,162 +61,41 @@ export function AnguirelTracker(props: Props): JSX.Element {
                 })
             );
 
-            setData(dataResult);
+            setData({
+                ...data,
+                ...dataResult,
+            });
             // setBitData(bitsResult);
-            await sleep(5000);
+            await sleep(2000);
             setSendRequest(sendRequest + 1);
         })();
     }, [qb, initialized, sendRequest]);
 
-    const url = (str: string) =>
-        urljoin(
-            "https://kielbasa.s3.us-east-2.amazonaws.com/autotracker/images",
-            str
-        );
-
-    const availableChecks = useMemo(
-        () =>
-            (data &&
-                Object.keys(data.events).map((z) => {
-                    const eventName = z as keyof FF6Events;
-                    return new TrackedCheck(eventName, data.events[eventName]);
-                })) ||
-            [],
-        [data]
-    );
-
-    const characters = useMemo(() => {
-        if (!data) {
-            return [];
-        }
-        return Object.keys(data.characters).map((charName) => {
-            const rawChecks =
-                characterChecks[charName as keyof typeof FF6Character];
-            const checks =
-                availableChecks?.filter((z) => rawChecks.includes(z.key)) || [];
-
-            return new TrackedCharacter(
-                charName,
-                checks,
-                data.characters[charName]
-            );
-        });
-    }, [data]);
-
-    const charToChecks = Object.keys(characterChecks).reduce((acc, val) => {
-        if (!characters) {
-            return acc;
-        }
-
-        const charName = val as keyof typeof FF6Character;
-
-        const checks = characterChecks[charName];
-        const availableEvents =
-            availableChecks?.filter((z) => checks.includes(z.key)) || [];
-
-        acc.push(
-            new TrackedCharacter(
-                charName,
-                availableEvents,
-                data?.characters[val] ?? false
-            )
-        );
-
-        return acc;
-    }, [] as Array<TrackedCharacter>);
-
-    const TERRA = charToChecks.find(
-        (z) => z.name === "TERRA"
-    ) as TrackedCharacter;
-    const SETZER = charToChecks.find(
-        (z) => z.name === "SETZER"
-    ) as TrackedCharacter;
-    const SABIN = charToChecks.find(
-        (z) => z.name === "SABIN"
-    ) as TrackedCharacter;
-    const GAU = charToChecks.find((z) => z.name === "GAU") as TrackedCharacter;
-    const CELES = charToChecks.find(
-        (z) => z.name === "CELES"
-    ) as TrackedCharacter;
-    const EDGAR = charToChecks.find(
-        (z) => z.name === "EDGAR"
-    ) as TrackedCharacter;
-    const SHADOW = charToChecks.find(
-        (z) => z.name === "SHADOW"
-    ) as TrackedCharacter;
-    const LOCKE = charToChecks.find(
-        (z) => z.name === "LOCKE"
-    ) as TrackedCharacter;
-    const CYAN = charToChecks.find(
-        (z) => z.name === "CYAN"
-    ) as TrackedCharacter;
-    const STRAGO = charToChecks.find(
-        (z) => z.name === "STRAGO"
-    ) as TrackedCharacter;
-    const RELM = charToChecks.find(
-        (z) => z.name === "RELM"
-    ) as TrackedCharacter;
-    const UMARO = charToChecks.find(
-        (z) => z.name === "UMARO"
-    ) as TrackedCharacter;
-    const MOG = charToChecks.find((z) => z.name === "MOG") as TrackedCharacter;
-    const GOGO = charToChecks.find(
-        (z) => z.name === "GOGO"
-    ) as TrackedCharacter;
-
-    const r1 = new TrackerRow(TERRA, SETZER);
-    const r2 = new TrackerRow(SABIN, GAU);
-    const r3 = new TrackerRow(CELES, EDGAR);
-    const r4 = new TrackerRow(SHADOW, LOCKE);
-    const r5 = new TrackerRow(CYAN, STRAGO);
-    const r6 = new TrackerRow(RELM, UMARO);
-    const r7 = new TrackerRow(MOG, GOGO);
-
-    const rows = [r1, r2, r3, r4, r5, r6, r7];
-
     return (
-        <div>
-            {rows.map((z) => {
-                const c1 = z.char1;
-                const c2 = z.char2;
-                if (!c1 || !c2) {
-                    return null;
-                }
-                const c1name = startCase(c1?.name.toLowerCase());
-                const c2name = startCase(c2?.name.toLowerCase());
-                return (
-                    <div>
-                        <Check
-                            imageUri={url(`Prt${c1name}.png`)}
-                            name={c1name}
-                            isChecked={c1.available}
-                        />
-                        {c1.checks.map((z) => {
-                            return (
-                                <Check
-                                    imageUri={url(z.name)}
-                                    name={z.name}
-                                    isChecked={z.complete}
-                                />
-                            );
-                        })}
-                        <Check
-                            imageUri={url(`Prt${c2name}.png`)}
-                            name={c1name}
-                            isChecked={c2.available}
-                        />
-                    </div>
-                );
-            })}
-            <TextField
-                disabled
-                multiline
-                fullWidth
-                maxRows={10}
-                rows={10}
-                value={logs.current.join("\r\n")}
-            />
-        </div>
+        <TrackerContext.Provider value={data}>
+            <Paper style={{ width: 600, minWidth: 600, maxWidth: 600, padding: 8 }}>
+                <TrackerHeader />
+                <div style={{ position: "relative" }}>
+                    {flatten(
+                        layout.map((layout) => {
+                            const $groups = layout.map((group) => {
+                                const [groupName, _, cells] = group.args;
+                                const $cells = cells.map((cell) => {
+                                    return <TrackerCell key={cell.args[0]} cell={cell} />;
+                                });
+
+                                return <TrackerGroup group={group}>{$cells}</TrackerGroup>;
+                            });
+
+                            return <TrackerRow>{$groups}</TrackerRow>;
+                        })
+                    )}
+                    <div style={{ position: "absolute" }}> </div>
+                </div>
+                <TrackerCounts />
+                <TextField disabled multiline fullWidth maxRows={5} rows={8} value={logs.current.join("\r\n")} />
+            </Paper>
+        </TrackerContext.Provider>
     );
 }
 

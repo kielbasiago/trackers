@@ -35,8 +35,13 @@ export function ObjectiveTrackerHeader(props: Props): JSX.Element {
         case ObjectiveTrackerState.FILE_SELECTED:
             Action = (
                 <>
-                    <Button onClick={onBeginTracking} variant="outlined">
+                    <Button onClick={onBeginTracking} variant="outlined" style={{ marginRight: 4 }}>
                         Start Tracking
+                    </Button>
+
+                    <Button component="label" variant="outlined">
+                        Choose Another File
+                        <input type="file" onChange={onFileSelect} hidden />
                     </Button>
                 </>
             );
@@ -65,11 +70,7 @@ export function ObjectiveTrackerHeader(props: Props): JSX.Element {
                     display: "block",
                 }}
             >
-                <Typography
-                    color={isError ? "error" : undefined}
-                    fontSize={"1.5rem"}
-                    variant="overline"
-                >
+                <Typography color={isError ? "error" : undefined} fontSize={"1.5rem"} variant="overline">
                     {message ?? null}
                 </Typography>
             </span>
