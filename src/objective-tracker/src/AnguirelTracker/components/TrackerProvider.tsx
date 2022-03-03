@@ -42,7 +42,7 @@ export const getDefaultTrackerData = () => {
         dragonCount: 0,
         esperCount: 0,
         gameTime: 0,
-        mode: TrackerMode.MANUAL,
+        mode: TrackerMode.AUTO,
     } as TrackerContextData;
 };
 export const TrackerContext = React.createContext<TrackerContextData | null>(null);
