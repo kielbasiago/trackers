@@ -4,7 +4,7 @@ import urljoin from "url-join";
 import { checkToAsset } from "../../types/ff6-types";
 import { LayoutCell, LayoutNumberCell } from "../layout";
 import { GetSaveDataResponse } from "../types";
-import { TrackerContext } from "./TrackerProvider";
+import { useTrackerContext } from "./TrackerProvider";
 import clsx from "clsx";
 import padStart from "lodash/padStart";
 
@@ -38,7 +38,8 @@ function secondsToHms(d: number) {
 }
 
 export function TrackerCounts(props: Props): JSX.Element {
-    const data = React.useContext(TrackerContext);
+    const allData = useTrackerContext();
+    const { data } = allData;
     const time = data?.gameTime ?? 0;
 
     const t = secondsToHms(time);

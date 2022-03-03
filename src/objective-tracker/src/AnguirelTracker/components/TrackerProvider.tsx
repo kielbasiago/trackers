@@ -1,20 +1,25 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import {
+    FF6Character,
     FF6CharacterFlags,
     ff6Characters,
+    FF6Dragon,
     FF6DragonFlags,
     ff6Dragons,
-    FF6EsperFlags,
+    FF6Event,
     FF6EventFlags,
     ff6Events,
 } from "../../types/ff6-types";
-import { GetSaveDataResponse, TrackerMode } from "../types";
+import { GetSaveDataResponse } from "../types";
 
-export type TrackerContextData = GetSaveDataResponse & {
-    mode: TrackerMode;
+export type TrackerContextData = {
+    data: GetSaveDataResponse;
+    onClick: (key: string, value?: number) => unknown;
+    onRightClick: (key: string, value?: number) => unknown;
+    updateFlag: (flag: string, value: any) => void;
 };
 
-export const getDefaultTrackerData = () => {
+export const getTrackerDefaults = () => {
     const characters = Object.keys(ff6Characters).reduce((acc, key) => {
         acc[key as keyof FF6CharacterFlags] = false;
         return acc;
@@ -27,7 +32,8 @@ export const getDefaultTrackerData = () => {
         acc[key as keyof FF6DragonFlags] = false;
         return acc;
     }, {} as FF6DragonFlags);
-    return {
+
+    const defaultData = {
         characters,
         events,
         dragons,
@@ -42,7 +48,25 @@ export const getDefaultTrackerData = () => {
         dragonCount: 0,
         esperCount: 0,
         gameTime: 0,
-        mode: TrackerMode.AUTO,
-    } as TrackerContextData;
+    } as TrackerContextData["data"];
+
+    return {
+        data: defaultData,
+    } as Pick<TrackerContextData, "data">;
 };
+
 export const TrackerContext = React.createContext<TrackerContextData | null>(null);
+
+export const useTrackerContext = () => {
+    const value = useContext(TrackerContext);
+    if (!value) {
+        return {
+            ...getTrackerDefaults(),
+            onClick: () => {},
+            onRightClick: () => {},
+            updateFlag: () => {},
+        } as TrackerContextData;
+    }
+
+    return value;
+};

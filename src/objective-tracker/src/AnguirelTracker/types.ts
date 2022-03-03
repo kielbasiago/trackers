@@ -52,3 +52,19 @@ export enum TrackerMode {
     AUTO = "AUTO",
     MANUAL = "MANUAL",
 }
+
+export enum TrackerBackground {
+    ANGUIREL = "ANGUIREL",
+    GREEN = "GREEN",
+    DARK = "DARK",
+}
+
+export enum TrackerFont {
+    "FF6" = "FF6",
+    "DEFAULT" = "DEFAULT",
+}
+
+export enum TrackerThemeMode {
+    LIGHT = "light",
+    DARK = "dark",
+}
