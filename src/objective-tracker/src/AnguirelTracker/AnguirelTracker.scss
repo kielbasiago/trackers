@@ -19,7 +19,7 @@ img {
 }
 
 #cell-shadow.gated-cell {
-    opacity: 30%;
+    opacity: 0.3;
     filter: brightness(0%);
 }
 
@@ -47,8 +47,16 @@ img {
     padding: 1px;
 }
 
-.multicheck-cell-incomplete {
-    background: rgba(0, 0, 0, 0.5);
+.theme-mode-light {
+    .multicheck-cell-incomplete {
+        background: rgba(255, 255, 255, 0.6);
+    }
+}
+
+.theme-mode-dark {
+    .multicheck-cell-incomplete {
+        background: rgba(0, 0, 0, 0.5);
+    }
 }
 
 .multicheck-cell-flex-start {
@@ -57,4 +65,17 @@ img {
 
 .multicheck-cell-flex-end {
     right: 1px;
+}
+
+// they would look weird being transparent with a green background
+.theme-GREEN {
+    #cell-shadow.gated-cell {
+        opacity: 1;
+    }
+    .inactive-cell {
+        opacity: 1;
+    }
+    .gated-cell {
+        opacity: 1;
+    }
 }

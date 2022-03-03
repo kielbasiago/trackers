@@ -2,6 +2,8 @@ import React from "react";
 import styled from "@emotion/styled";
 import { LayoutGroup } from "../layout";
 import clsx from "clsx";
+import { TrackerMode, TrackerBackground } from "../types";
+import { useTrackerSettings } from "../../settings/settings";
 
 type Props = {
     group: LayoutGroup;
@@ -32,9 +34,14 @@ const BaseContainer = styled.div`
     padding-right: 2px;
     position: relative;
     ${Object.keys(characterBackgrounds).map((c) => {
-        const retVal = `&.group-${c} {
-        background: ${characterBackgrounds[c]};
-    }
+        const retVal = `
+        &.group-${c}-${TrackerBackground.ANGUIREL} {
+            background: ${characterBackgrounds[c]};
+        }
+
+        &.group-${c}-${TrackerBackground.GREEN} {
+            background: #0F0;
+        }
     `;
         return retVal;
     })};
@@ -42,17 +49,16 @@ const BaseContainer = styled.div`
 
 const OuterContainer = styled(BaseContainer)``;
 
-const NonGrouped = styled(BaseContainer)`
-    flex: 1;
-    display: flex;
-`;
-
 export const TrackerGroup: React.FC<Props> = (props) => {
     const { children, group } = props;
     const [groupName, justify] = group.args;
+    const { background: theme } = useTrackerSettings();
 
     return (
-        <OuterContainer className={clsx(`TrackerGroup`, `group-${groupName}`)} style={{ justifyContent: justify }}>
+        <OuterContainer
+            className={clsx(`TrackerGroup`, `group-${groupName}`, `group-${groupName}-${theme}`)}
+            style={{ justifyContent: justify }}
+        >
             {children}
         </OuterContainer>
     );

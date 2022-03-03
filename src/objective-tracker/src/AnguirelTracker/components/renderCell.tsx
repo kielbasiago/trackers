@@ -1,6 +1,7 @@
 import Tooltip from "@mui/material/Tooltip";
 import { useEffect } from "react";
 import urljoin from "url-join";
+import { useTrackerSettings } from "../../settings/settings";
 import { checkToAsset } from "../../types/ff6-types";
 import { TrackerMode } from "../types";
 import { useTrackerContext } from "./TrackerProvider";
@@ -14,7 +15,8 @@ export function RenderCell(
     containerClassName: string,
     adornment: React.ReactNode
 ): JSX.Element {
-    const { mode, onClick, onRightClick } = useTrackerContext();
+    const { onClick, onRightClick } = useTrackerContext();
+    const { mode } = useTrackerSettings();
 
     useEffect(() => {}, []);
 

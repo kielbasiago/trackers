@@ -1,13 +1,11 @@
-import { Tooltip, Typography } from "@mui/material";
-import React from "react";
-import urljoin from "url-join";
-import { checkToAsset, FF6Character, FF6Event } from "../../types/ff6-types";
-import { CharacterCell as CharCellType, LayoutCell, LayoutNumberCell } from "../layout";
-import { characterChecks, GetSaveDataResponse } from "../types";
-import { useTrackerContext } from "./TrackerProvider";
+import { Typography } from "@mui/material";
 import clsx from "clsx";
-import { RenderCell } from "./renderCell";
+import React from "react";
+import { CharacterCell as CharCellType, LayoutCell, LayoutNumberCell } from "../layout";
+import { GetSaveDataResponse } from "../types";
 import CharacterCell from "./cells/CharacterCell";
+import { RenderCell } from "./renderCell";
+import { useTrackerContext } from "./TrackerProvider";
 
 type Props = {
     cell: LayoutCell | LayoutNumberCell;

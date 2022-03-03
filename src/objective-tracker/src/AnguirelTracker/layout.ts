@@ -343,7 +343,7 @@ const layout = [
             ),
         ]),
         new LayoutGroup("none", "center", [
-            new LayoutCell("atmaWeapon", "atmaWeapon", ({ events }) => events.atmaWeapon),
+            new LayoutNumberCell("dragonCount", "dragonCount", ({ dragonCount }) => dragonCount, undefined, { max: 8 }),
         ]),
         new LayoutGroup("strago", "flex-end", [
             new LayoutCell(

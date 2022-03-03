@@ -23,7 +23,6 @@ const characterBackgrounds: Record<string, string> = {
 const CellContainer = styled.span`
     ${Object.keys(characterBackgrounds).map((c) => {
         const retVal = `.group-${c} {
-            background: ${characterBackgrounds[c]};
         }
         `;
         return retVal;

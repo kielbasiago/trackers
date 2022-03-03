@@ -2,27 +2,108 @@ import { Paper, TextField } from "@mui/material";
 import flatten from "lodash/flatten";
 import React, { useEffect, useRef, useState } from "react";
 import { GetSaveDataQuery } from "../queries/GetSaveDataQuery";
+import { useTrackerSettings } from "../settings/settings";
 import { QueryBuilder } from "../tracker/QueryBuilder";
 import { snesSession } from "../tracker/SnesSession";
+import { FF6Character, FF6Dragon, FF6Event } from "../types/ff6-types";
 import { sleep } from "../utils/sleep";
-import "./AnguirelTracker.css";
+import "./AnguirelTracker.scss";
 import TrackerCell from "./components/TrackerCell";
-import TrackerHeader from "./components/TrackerHeader";
 import { TrackerCounts } from "./components/TrackerCounts";
-import { useTrackerData, TrackerContext, TrackerContextData } from "./components/TrackerProvider";
-import TrackerRow from "./components/TrackerRow";
-import { layout } from "./layout";
 import TrackerGroup from "./components/TrackerGroup";
+import TrackerHeader from "./components/TrackerHeader";
+import { getTrackerDefaults, TrackerContext, TrackerContextData } from "./components/TrackerProvider";
+import TrackerRow from "./components/TrackerRow";
+import { getCell, layout, LayoutNumberCell } from "./layout";
+import { GetSaveDataResponse, TrackerMode } from "./types";
+import clsx from "clsx";
 
 type Props = Record<string, unknown>;
+type Flag = keyof TrackerContextData["data"]["allFlags"];
 
 export function AnguirelTracker(props: Props): JSX.Element {
     const [session] = useState(snesSession);
     const [qb, setQb] = useState<QueryBuilder>();
     const [initialized, setInitialized] = useState(false);
     const [initializing, setInitializing] = useState(false);
-    const trackerData = useTrackerData();
-    const { data, setData } = trackerData;
+
+    const [trackerData, setTrackerData] = useState(getTrackerDefaults());
+    const { mode, background, themeMode } = useTrackerSettings();
+
+    const { data } = trackerData;
+
+    const providerData = {
+        ...trackerData,
+        // increment
+        onClick(key: string, currentValue?: number) {
+            if (mode === TrackerMode.AUTO) {
+                return;
+            }
+
+            // WIP
+            const cell = getCell(key);
+            if (cell instanceof LayoutNumberCell && currentValue != null) {
+                const [_key, _display, _cb1, _cb2, options = { min: 0, max: 3 }] = cell.args;
+                const { min, max } = options;
+                let newValue = currentValue++;
+                if (newValue > max) {
+                } else {
+                }
+            }
+
+            const allFlags = trackerData.data.allFlags;
+            const values = Object.keys(trackerData.data.allFlags)
+                .filter((z) => z.includes(key))
+                .map((key) => trackerData.data.allFlags[key as Flag]);
+
+            const max = values.length;
+            // const currentValue = values.filter((v) => !!v).length;
+
+            // const item = keys[key as unknown as keyof (FF6CharacterFlags & FF6DragonFlags & FF6EventFlags)];
+        },
+
+        // decrement
+        onRightClick(key: string, value?: number) {
+            const allFlags = trackerData.data.allFlags;
+            const keys = Object.keys(allFlags).filter((z) => z.includes(key));
+            // const item = allFlags[key as unknown as keyof (FF6CharacterFlags & FF6DragonFlags & FF6EventFlags)];
+        },
+
+        updateData(newData: GetSaveDataResponse) {
+            setTrackerData({
+                ...trackerData,
+                data: newData,
+            });
+        },
+
+        updateFlag(flag, value: any) {
+            const character = !!trackerData.data.characters[flag as FF6Character];
+            const event = !!trackerData.data.events[flag as FF6Event];
+            const dragon = !!trackerData.data.dragons[flag as FF6Dragon];
+
+            if (character) {
+                const f = flag as FF6Character;
+                const newValue = !trackerData.data.allFlags[f];
+                trackerData.data.allFlags[f] = newValue;
+                trackerData.data.characters[f] = newValue;
+            } else if (event) {
+                const f = flag as FF6Event;
+                const newValue = !trackerData.data.allFlags[f];
+                trackerData.data.allFlags[f] = newValue;
+                trackerData.data.events[f] = newValue;
+            } else if (dragon) {
+                const f = flag as FF6Dragon;
+                const newValue = !trackerData.data.allFlags[f];
+                trackerData.data.allFlags[f] = newValue;
+                trackerData.data.dragons[f] = newValue;
+            }
+        },
+
+        setMode(mode: TrackerMode) {
+            // noop for now
+        },
+    } as TrackerContextData;
+
     const logs = useRef<Array<string>>([]);
     const [sendRequest, setSendRequest] = useState(0);
     const [____ignoreRenderVal, setRender] = useState(0);
@@ -62,33 +143,42 @@ export function AnguirelTracker(props: Props): JSX.Element {
                 })
             );
 
-            setData(dataResult);
+            setTrackerData({
+                ...trackerData,
+                data: dataResult,
+            });
             // setBitData(bitsResult);
-            await sleep(2000);
+            await sleep(800);
             setSendRequest(sendRequest + 1);
         })();
     }, [qb, initialized, sendRequest]);
 
     return (
-        <TrackerContext.Provider value={trackerData}>
-            <Paper style={{ width: 600, minWidth: 600, maxWidth: 600, padding: 8 }}>
+        <TrackerContext.Provider value={providerData}>
+            <Paper
+                style={{ width: 600, minWidth: 600, maxWidth: 600, padding: 8 }}
+                className={clsx(`theme-${background}`, `theme-mode-${themeMode}`)}
+            >
                 <TrackerHeader />
                 <div style={{ position: "relative" }}>
                     {flatten(
-                        layout.map((layout) => {
+                        layout.map((layout, layoutIndex) => {
                             const $groups = layout.map((group) => {
                                 const [groupName, _, cells] = group.args;
                                 const $cells = cells.map((cell) => {
                                     return <TrackerCell key={cell.args[0]} cell={cell} />;
                                 });
 
-                                return <TrackerGroup group={group}>{$cells}</TrackerGroup>;
+                                return (
+                                    <TrackerGroup key={groupName} group={group}>
+                                        {$cells}
+                                    </TrackerGroup>
+                                );
                             });
 
-                            return <TrackerRow>{$groups}</TrackerRow>;
+                            return <TrackerRow key={layoutIndex}>{$groups}</TrackerRow>;
                         })
                     )}
-                    <div style={{ position: "absolute" }}> </div>
                 </div>
                 <TrackerCounts />
                 <TextField disabled multiline fullWidth maxRows={5} rows={8} value={logs.current.join("\r\n")} />

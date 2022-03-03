@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import { FF6Character } from "../../../types/ff6-types";
 import clsx from "clsx";
 import { RenderCell } from "../renderCell";
+import { useTrackerSettings } from "../../../settings/settings";
 
 type Props = {
     cell: CellType;
@@ -32,6 +33,7 @@ const charOrder = [
 export function CharacterCell(props: Props): JSX.Element {
     const { cell } = props;
     const { data } = useTrackerContext();
+    const { characterTag } = useTrackerSettings();
 
     if (!data) {
         return <></>;
@@ -50,21 +52,19 @@ export function CharacterCell(props: Props): JSX.Element {
 
     const className = clsx(isAvailable || "gated-cell", active || "inactive-cell", active && "active-cell");
     const fontSize = "1.2rem";
-    const showAdornment = active;
+    const showAdornment = characterTag;
     const idx = charOrder.indexOf(key);
 
     let isRight = !!(idx % 2);
 
     const complete = completedCheckCount / checkCount === 1;
-    if (completedCheckCount / checkCount === 1) {
-    }
     // ✅
     const adornmentValue = complete ? (
         <></>
     ) : active ? (
-        <span>
+        <>
             {completedCheckCount} / {checkCount}
-        </span>
+        </>
     ) : null;
 
     const adornment =
@@ -77,14 +77,19 @@ export function CharacterCell(props: Props): JSX.Element {
                         !complete && "multicheck-cell-incomplete"
                     )}
                 >
-                    <Typography variant="h6" className={className} style={{ fontSize: fontSize, lineHeight: "normal" }}>
+                    <Typography
+                        color="inherit"
+                        variant="h6"
+                        className={className}
+                        style={{ fontSize: fontSize, lineHeight: "normal" }}
+                    >
                         {adornmentValue}
                     </Typography>
                 </div>
             </div>
         );
 
-    return RenderCell(key, displayName, className, "", adornment);
+    return RenderCell(key, displayName, className, "", showAdornment ? adornment : null);
 }
 
 export default CharacterCell;
