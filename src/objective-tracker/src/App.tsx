@@ -7,6 +7,7 @@ import ThemeProvider from "@mui/system/ThemeProvider";
 import { createTheme, Theme, ThemeOptions } from "@mui/material";
 import { normalFontTheme, ff6FontTheme } from "./settings/settings";
 import { useLocation } from "react-router-dom";
+import CharacterDraw from "./CharacterDraw/CharacterPortraitDraw";
 
 const AnguirelTracker = React.lazy(() => import("./AnguirelTracker/AnguirelTracker"));
 
@@ -37,6 +38,7 @@ function App() {
         <ThemeProvider theme={theme}>
             <AppSettingsProvider onThemeUpdate={(font, themeMode) => onThemeUpdate(font, themeMode)}>
                 <Routes>
+                    <Route path="/test" element={<CharacterDraw />} />
                     <Route path="/" element={<AnguirelTracker />} />
                 </Routes>
             </AppSettingsProvider>

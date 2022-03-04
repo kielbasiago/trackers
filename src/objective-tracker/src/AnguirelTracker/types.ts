@@ -68,3 +68,8 @@ export enum TrackerThemeMode {
     LIGHT = "light",
     DARK = "dark",
 }
+
+export enum TrackerTab {
+    "GATING" = "GATING",
+    "OBJECTIVE" = "OBJECTIVE",
+}
