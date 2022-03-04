@@ -7,15 +7,15 @@ import {
     ExternalLogger,
     GetAddressRequest,
     PutAddressRequest,
-    RegisterNameRequest
-} from './types';
-import { SnesInfo, SnesInfoArray } from './SnesInfo';
-import * as ws from 'websocket';
-import { getLogger, Logger } from 'loglevel';
-import { RequestSender } from './RequestSender';
-import Queue from 'promise-queue';
+    RegisterNameRequest,
+} from "./types";
+import { SnesInfo, SnesInfoArray } from "./SnesInfo";
+import * as ws from "websocket";
+import { getLogger, Logger } from "loglevel";
+import { RequestSender } from "./RequestSender";
+import Queue from "promise-queue";
 
-const wsServer = 'ws://localhost:8080';
+const wsServer = "ws://localhost:8080";
 
 type AnyFn = (...args: Array<any>) => any;
 type Watches<T extends string> = [T, AnyFn];
@@ -40,6 +40,7 @@ export class SnesSession {
     public logMessages: Array<string> = [];
     public readonly name: string;
     private _externalLogger: ExternalLogger;
+    public status: "IDLE" | "ERROR" | "CONNECTING" | "CONNECTED" = "IDLE";
 
     constructor(appName: string) {
         this.name = appName;
@@ -60,36 +61,39 @@ export class SnesSession {
         if (!this._wsClient) {
             this._wsClient = new ws.w3cwebsocket(wsServer);
         }
+        this.status = "CONNECTING";
         await this._connect();
 
         if (!this._sender) {
-            this.logger.error('No sender was initialized after calling connect()');
+            this.logger.error("No sender was initialized after calling connect()");
             return;
         }
         try {
-            this.addLogMessage('Loading device list...');
+            this.addLogMessage("Loading device list...");
             this._deviceList = await this.getDeviceList();
             this.addLogMessage(`Loaded device list: ${JSON.stringify(this._deviceList)}`);
 
             if (this._deviceList.length > 1) {
                 this.addLogMessage(
-                    'WARNING: Multiple devices found. Will attempt to use the last registered.. If the attach hangs, restarts QUsb2Snes and try again.'
+                    "WARNING: Multiple devices found. Will attempt to use the last registered.. If the attach hangs, restarts QUsb2Snes and try again."
                 );
             }
-            this.addLogMessage('Attaching to device');
+            this.addLogMessage("Attaching to device");
             const deviceAttached = await this.attach();
             this.addLogMessage(`Attached to device '${deviceAttached}'`);
 
-            this.addLogMessage('Registering with QUsb2Snes');
+            this.addLogMessage("Registering with QUsb2Snes");
             await this.registerName();
-            this.addLogMessage('Registered successfully');
+            this.addLogMessage("Registered successfully");
 
-            this.addLogMessage('Loading device info');
+            this.addLogMessage("Loading device info");
             await this.getDeviceInfo();
             this.addLogMessage(`Loaded device info ${JSON.stringify(this.info)}`);
+            this.status = "CONNECTED";
         } catch (err) {
             const e = err as Error;
             this.addLogMessage(`ERROR: ${e.message}`);
+            this.status = "ERROR";
         }
         return;
     }
@@ -109,23 +113,23 @@ export class SnesSession {
         }
 
         this._connectionPromise = new Promise((resolve, reject) => {
-            this.logger.info('begin connecting');
+            this.logger.info("begin connecting");
             this._wsClient.onopen = async () => {
                 this._sender = new RequestSender(this._wsClient, (inc) => {
-                    return { ...inc, Space: 'SNES' };
+                    return { ...inc, Space: "SNES" };
                 });
-                this.addLogMessage('RequestSender initialized');
+                this.addLogMessage("RequestSender initialized");
                 resolve();
             };
 
             this._wsClient.onclose = (event) => {
                 // document.getElementById("autotracker_connect_button").disabled = false;
-                this.addLogMessage('Disconnected from QUsb2Snes.');
+                this.addLogMessage("Disconnected from QUsb2Snes.");
                 reject();
             };
 
             this._wsClient.onmessage = async (event) => {
-                console.log('message', event);
+                console.log("message", event);
             };
         });
 
@@ -149,11 +153,11 @@ export class SnesSession {
 
         this._devicePromise = this._sender
             .sendUtf8<DeviceListRequest, DeviceListResponse>({
-                Opcode: 'DeviceList',
-                Space: 'SNES'
+                Opcode: "DeviceList",
+                Space: "SNES",
             })
             .then((resp) => {
-                this.logger.debug('Device list: ', resp.Results);
+                this.logger.debug("Device list: ", resp.Results);
                 return resp;
             })
             .then(({ Results }) => Results);
@@ -163,47 +167,47 @@ export class SnesSession {
 
     private async attach(): Promise<string> {
         if (!this._sender) {
-            return '';
+            return "";
         }
 
         if (this._attachPromise) {
-            return Promise.resolve('');
+            return Promise.resolve("");
         }
 
         if (!this._deviceList.length) {
-            const msg = 'no devices to attach to';
+            const msg = "no devices to attach to";
             this.logger.error(msg);
             throw new Error(msg);
         }
 
         const deviceAttached = [this._deviceList[this._deviceList.length - 1]];
         this._attachPromise = this._sender.sendNoResponse<AttachToDeviceRequest>({
-            Opcode: 'Attach',
-            Space: 'SNES',
-            Operands: deviceAttached
+            Opcode: "Attach",
+            Space: "SNES",
+            Operands: deviceAttached,
         });
 
         await this._attachPromise;
 
-        this.logger.info('Attach successful');
+        this.logger.info("Attach successful");
 
         return deviceAttached[0];
     }
 
     private async registerName(): Promise<void> {
         if (!this._sender) {
-            throw new Error('No request sender was initialized');
+            throw new Error("No request sender was initialized");
         }
 
         await this._sender.sendNoResponse<RegisterNameRequest>({
-            Opcode: 'Name',
-            Operands: [this.name]
+            Opcode: "Name",
+            Operands: [this.name],
         });
     }
 
     private async getDeviceInfo(): Promise<DeviceInfoResponse> {
         if (!this._sender) {
-            throw new Error('No request sender was initialized');
+            throw new Error("No request sender was initialized");
         }
 
         if (this._deviceInfoPromise) {
@@ -211,15 +215,15 @@ export class SnesSession {
         }
 
         this._deviceInfoPromise = this._sender.sendUtf8<DeviceInfoRequest, DeviceInfoResponse>({
-            Opcode: 'Info'
+            Opcode: "Info",
         });
 
-        this.logger.debug('Sending device info request');
+        this.logger.debug("Sending device info request");
         const response = await this._deviceInfoPromise;
 
         this.info = new SnesInfo(response.Results as SnesInfoArray);
 
-        this.logger.info('Received device info', this.info.toJson());
+        this.logger.info("Received device info", this.info.toJson());
 
         return this._deviceInfoPromise;
     }
@@ -232,7 +236,7 @@ export class SnesSession {
      */
     public async readRam(addressStart: string, blockCount: number): Promise<Uint8Array> {
         if (!this._sender) {
-            throw new Error('No request sender was initialized');
+            throw new Error("No request sender was initialized");
         }
 
         const addressVal = Number.parseInt(addressStart, 16);
@@ -241,8 +245,8 @@ export class SnesSession {
 
         const cb = () =>
             this._sender?.sendBinary<GetAddressRequest>({
-                Opcode: 'GetAddress',
-                Operands: [addressVal.toString(16), blockCount.toString(16)]
+                Opcode: "GetAddress",
+                Operands: [addressVal.toString(16), blockCount.toString(16)],
             }) || Promise.reject();
 
         const result = await queue.add(cb);
@@ -252,7 +256,7 @@ export class SnesSession {
 
     public async writeRom(addressStart: string, blockCount: number, data: ArrayBuffer): Promise<Uint8Array> {
         if (!this._sender) {
-            throw new Error('No request sender was initialized');
+            throw new Error("No request sender was initialized");
         }
 
         const addressVal = Number.parseInt(addressStart, 16);
@@ -260,19 +264,19 @@ export class SnesSession {
         this.logger.info(`Try writing ${blockCount} bytes of ram to`, addressStart);
 
         const cb1 = () => {
-            this.logger.info('sending put request');
+            this.logger.info("sending put request");
             return (
                 this._sender?.sendNoResponse<PutAddressRequest>({
-                    Opcode: 'PutAddress',
-                    Operands: [addressVal.toString(16), blockCount.toString(16)]
+                    Opcode: "PutAddress",
+                    Operands: [addressVal.toString(16), blockCount.toString(16)],
                 }) || Promise.reject()
             );
         };
 
         const result = await queue.add(cb1).catch((err) => {
-            console.error('ERR', err);
+            console.error("ERR", err);
         });
-        this.logger.info('result', result);
+        this.logger.info("result", result);
         await queue.add(async () => {
             return this._sender?.sendRawNoResponse(data);
         });
@@ -283,12 +287,12 @@ export class SnesSession {
     public toJson() {
         return {
             name: this.name,
-            info: this.info?.toJson()
+            info: this.info?.toJson(),
         };
     }
 
     private onClose = (err: number, description: string) => {
-        this.logger.info('connection closed', err, description);
+        this.logger.info("connection closed", err, description);
         this.info = null;
         this._connection = null;
         this._deviceList = [];
@@ -296,28 +300,28 @@ export class SnesSession {
 
     private onError = (err: Error) => {
         // this.logger.error('connection error', err);
-        this._connection?.off('close', this.onClose);
-        this._connection?.off('error', this.onError);
-        this._connection?.off('pause', this.onPause);
-        this._connection?.off('ping', this.onPing);
-        this._connection?.off('pong', this.onPong);
-        this._connection?.off('resume', this.onResume);
+        this._connection?.off("close", this.onClose);
+        this._connection?.off("error", this.onError);
+        this._connection?.off("pause", this.onPause);
+        this._connection?.off("ping", this.onPing);
+        this._connection?.off("pong", this.onPong);
+        this._connection?.off("resume", this.onResume);
     };
 
     private onPause = () => {
-        this.logger.info('connection paused');
+        this.logger.info("connection paused");
     };
 
     private onPong = () => {
-        this.logger.info('connection pong');
+        this.logger.info("connection pong");
     };
 
     private onPing = () => {
-        this.logger.info('connection ping');
+        this.logger.info("connection ping");
     };
 
     private onResume = () => {
-        this.logger.info('connection resumed');
+        this.logger.info("connection resumed");
     };
 
     private get logger(): Logger {
@@ -325,10 +329,10 @@ export class SnesSession {
             return this._logger;
         }
 
-        this._logger = getLogger('SnesSession');
-        this._logger.setLevel('info');
+        this._logger = getLogger("SnesSession");
+        this._logger.setLevel("info");
         return this._logger;
     }
 }
 
-export const snesSession = new SnesSession('ff6erizer');
+export const snesSession = new SnesSession("ff6erizer");

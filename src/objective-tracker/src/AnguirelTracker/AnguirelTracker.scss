@@ -28,10 +28,19 @@ img {
     filter: brightness(50%) grayscale(100%);
 }
 
-.gated-cell {
+.gated-cell:not(.complete-cell) {
     /* filter: grayscale(100%); */
     opacity: 0.3;
     filter: brightness(30%) grayscale(100%);
+}
+
+.overlay-background {
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .overlay {

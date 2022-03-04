@@ -43,7 +43,7 @@ export function TrackerCell(props: Props): JSX.Element {
         return RenderCell(
             key,
             displayName,
-            clsx(isAvailable || "gated-cell", completed || "inactive-cell", completed && "active-cell"),
+            clsx(isAvailable || "gated-cell", completed || "inactive-cell", completed && "complete-cell"),
             "",
             null
         );
@@ -54,7 +54,7 @@ export function TrackerCell(props: Props): JSX.Element {
         const active = Math.max(min, Math.min(max ?? 3, value)) > 0;
         const isAvailable = gated ? gated(data as GetSaveDataResponse) : true;
 
-        const className = clsx(isAvailable || "gated-cell", active || "inactive-cell", active && "active-cell");
+        const className = clsx(isAvailable || "gated-cell", active || "inactive-cell", active && "complete-cell");
 
         const fontSize = "2.2rem";
         const adornmentValue = value;

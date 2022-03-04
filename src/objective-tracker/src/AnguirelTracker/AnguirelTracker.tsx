@@ -1,4 +1,4 @@
-import { Paper, TextField } from "@mui/material";
+import { Paper, TextField, Typography } from "@mui/material";
 import flatten from "lodash/flatten";
 import React, { useEffect, useRef, useState } from "react";
 import { GetSaveDataQuery } from "../queries/GetSaveDataQuery";
@@ -17,6 +17,7 @@ import TrackerRow from "./components/TrackerRow";
 import { getCell, layout, LayoutNumberCell } from "./layout";
 import { GetSaveDataResponse, TrackerMode } from "./types";
 import clsx from "clsx";
+import last from "lodash/last";
 
 type Props = Record<string, unknown>;
 type Flag = keyof TrackerContextData["data"]["allFlags"];
@@ -125,6 +126,7 @@ export function AnguirelTracker(props: Props): JSX.Element {
                         setRender(Math.random());
                     });
                     await qb.connect();
+                    session.logMessages.push("CONNECTED");
                     setInitialized(true);
                 }
             })();
@@ -178,6 +180,11 @@ export function AnguirelTracker(props: Props): JSX.Element {
 
                             return <TrackerRow key={layoutIndex}>{$groups}</TrackerRow>;
                         })
+                    )}
+                    {session.status === "CONNECTED" ? null : (
+                        <div className="overlay overlay-background">
+                            <Typography>{last(session.logMessages)}</Typography>
+                        </div>
                     )}
                 </div>
                 <TrackerCounts />
