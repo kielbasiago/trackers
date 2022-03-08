@@ -11,8 +11,8 @@ RUN yarn install --frozen-lockfile
 COPY . .
 
 WORKDIR /src/src/objective-tracker
-ARG API_URL 
-ENV API_URL $API_URL
+ARG PUBLIC_URL 
+ENV PUBLIC_URL $PUBLIC_URL
 
 RUN yarn build
 RUN mv "./build" /app

@@ -22,8 +22,6 @@ jobs:
         environment: deploy # set up in github settings
         env:
             ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-            ECR_REPO: ff6-tracker
-            TAG: latest
 
         steps:
             - uses: actions/checkout@v2
@@ -33,7 +31,9 @@ jobs:
 
             - name: Build Web
               run: >-
-                  docker build -f Dockerfile --tag ${ECR_REPO}:${TAG} .
+                  docker build -f Dockerfile \
+                    --build-arg PUBLIC_URL=/tracker \ 
+                    --tag ${ECR_REPO}:${TAG} .
               continue-on-error: false
 
             - name: Push to ECR
