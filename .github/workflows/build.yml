@@ -1,0 +1,46 @@
+name: Build Sausage Web
+
+on:
+    workflow_dispatch:
+    push:
+        paths:
+            - src/**
+            - .env
+            - Dockerfile
+            - lerna.json
+            - package.json
+            - prettier.config.js
+            - yarn.lock
+
+        branches:
+            - main
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        env:
+            ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+            ECR_REPO: ff6-tracker
+            TAG: latest
+
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Version Number
+              run: echo ${GITHUB_RUN_NUMBER}
+
+            - name: Build Web
+              run: >-
+                  docker build -f Dockerfile.web --tag ${ECR_REPO}:${TAG} .
+              continue-on-error: false
+
+            - name: Push to ECR
+              id: ecr-push
+              uses: jwalton/gh-ecr-push@dc79198ca45d6a64d3b0ed48d29ef93dc4adf77c
+              with:
+                  access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  region: us-east-2
+                  local-image: ${ECR_REPO}:${TAG}
+                  image: ${ECR_REPO}:${TAG}, ${ECR_REPO}:${TAG}-1.0.${GITHUB_RUN_NUMBER}
+              continue-on-error: false

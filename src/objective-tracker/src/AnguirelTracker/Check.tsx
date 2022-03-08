@@ -24,7 +24,7 @@ export function Check(props: Props): JSX.Element {
     const { imageUri, isChecked, name } = props;
     return (
         <Cell>
-            <img src={imageUri} alt={name} title={name} />
+            <img src={imageUri} alt={name} title={name} width={64} height={64} />
             <span>
                 {name} {imageUri} {isChecked.toString()}
             </span>

@@ -6,7 +6,8 @@ import { checkToAsset } from "../../types/ff6-types";
 import { TrackerMode } from "../types";
 import { useTrackerContext } from "./TrackerProvider";
 
-const url = (str: string) => urljoin("https://kielbasa.s3.us-east-2.amazonaws.com/autotracker/images", `${str}.png`);
+// const url = (str: string) => urljoin("https://kielbasa.s3.us-east-2.amazonaws.com/autotracker/images", `${str}.png`);
+const url = (str: string) => urljoin(window.location.origin, "images", `${str}.png`);
 
 export function RenderCell(
     key: string | null,
@@ -34,7 +35,14 @@ export function RenderCell(
                     className={containerClassName}
                     style={{ position: "relative", userSelect: "none" }}
                 >
-                    <img id={`cell-${key}`} src={url(checkToAsset[key])} alt={key} className={className} />
+                    <img
+                        id={`cell-${key}`}
+                        src={url(checkToAsset[key])}
+                        alt={key}
+                        className={className}
+                        width={64}
+                        height={64}
+                    />
                     {adornment ? adornment : null}
                 </span>
             </>
