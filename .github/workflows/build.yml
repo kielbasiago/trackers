@@ -31,7 +31,7 @@ jobs:
 
             - name: Build Web
               run: >-
-                  docker build -f Dockerfile.web --tag ${ECR_REPO}:${TAG} .
+                  docker build -f Dockerfile --tag ${ECR_REPO}:${TAG} .
               continue-on-error: false
 
             - name: Push to ECR

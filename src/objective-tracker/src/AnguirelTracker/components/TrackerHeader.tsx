@@ -3,7 +3,6 @@ import startCase from "lodash/startCase";
 import React, { useState } from "react";
 import { useTrackerContext } from "./TrackerProvider";
 import styled from "@emotion/styled";
-import IconButton from "@mui/material/IconButton";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ShareIcon from "@mui/icons-material/Share";
 import Tooltip from "@mui/material/Tooltip";
@@ -21,7 +20,12 @@ import { useTrackerSettings } from "../../settings/settings";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import CopyIcon from "@mui/icons-material/FileCopyOutlined";
 type Props = Record<string, unknown>;
 
 const Container = styled.div`
@@ -39,8 +43,9 @@ const Options = styled.span`
     flex: 0;
 `;
 
-const NormalTypography = styled(Typography)`
-    font-family: "Roboto";
+const ListItemText = styled(Typography)`
+    flex: 1;
+    float: left;
 `;
 
 export function TrackerHeader(props: Props): JSX.Element {
@@ -79,10 +84,69 @@ export function TrackerHeader(props: Props): JSX.Element {
             </Tooltip>
         </div>
     );
+
+    const hideItems = ".tracker-header, .tracker-log { display: none }";
+    const bg = ".tracker-background { background: transparent }";
+
+    const customCss = (
+        <>
+            <div>{hideItems}</div>
+            <div>{bg}</div>
+        </>
+    );
     const shareDialog = (
         <Dialog open={showShare} onBackdropClick={() => setShowShare(false)}>
-            <DialogTitle></DialogTitle>
-            <DialogContent></DialogContent>
+            <DialogTitle>OBS Options</DialogTitle>
+            <DialogContent>
+                <List>
+                    <ListItem>
+                        <ListItemText>URL:</ListItemText>
+                        <ListItemText>
+                            <Tooltip title={`Copy URL to clipboard`}>
+                                <span>
+                                    Current URL
+                                    <CopyToClipboard text={window.location.href}>
+                                        <IconButton size="small">
+                                            <CopyIcon />
+                                        </IconButton>
+                                    </CopyToClipboard>
+                                </span>
+                            </Tooltip>
+                        </ListItemText>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText>Width:</ListItemText>
+                        <ListItemText>600px</ListItemText>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText>Height:</ListItemText>
+                        <ListItemText>541px</ListItemText>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText>Custom CSS:</ListItemText>
+                        <ListItemText style={{ paddingLeft: 8 }}>
+                            {customCss}
+                            <Tooltip title={`Copy CSS to clipboard`}>
+                                <span>
+                                    <CopyToClipboard text={`${hideItems} ${bg}`}>
+                                        <IconButton size="small">
+                                            <CopyIcon />
+                                        </IconButton>
+                                    </CopyToClipboard>
+                                </span>
+                            </Tooltip>
+                            <div>
+                                <Typography variant="caption">
+                                    Change background: transparent above to{" "}
+                                    <Link target="_blank" href="https://www.w3schools.com/cssref/css_colors.asp">
+                                        any CSS color you want!
+                                    </Link>
+                                </Typography>
+                            </div>
+                        </ListItemText>
+                    </ListItem>
+                </List>
+            </DialogContent>
             <DialogActions>
                 <Button variant="outlined" onClick={() => setShowShare(false)}>
                     Close

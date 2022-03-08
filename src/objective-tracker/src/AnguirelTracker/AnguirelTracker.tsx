@@ -162,7 +162,6 @@ export function AnguirelTracker(props: Props): JSX.Element {
                     width: 600,
                     minWidth: 600,
                     maxWidth: 600,
-                    padding: 8,
                     boxShadow: "none",
                     height: "100%",
                     borderRadius: 0,
@@ -202,6 +201,7 @@ export function AnguirelTracker(props: Props): JSX.Element {
                     rows={8}
                     value={logs.current.join("\r\n")}
                     style={{ marginTop: 48 }}
+                    className={"tracker-log"}
                 />
             </Paper>
         </TrackerContext.Provider>
