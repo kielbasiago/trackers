@@ -11,6 +11,7 @@ on:
             - package.json
             - prettier.config.js
             - yarn.lock
+            - .github/**
 
         branches:
             - main

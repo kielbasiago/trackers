@@ -3,11 +3,14 @@ FROM node:14.17.0-alpine AS nodebuild
 WORKDIR /src
 
 COPY package.json package.json
+COPY lerna.json lerna.json
 COPY yarn.lock yarn.lock
 COPY ["./src/objective-tracker/package.json", "src/objective-tracker/package.json"]
 
 RUN yarn install --frozen-lockfile
-COPY . .
+COPY src src
+copy .env .env
+COPY node_modules node_modules
 
 WORKDIR /src/src/objective-tracker
 ARG API_URL 
