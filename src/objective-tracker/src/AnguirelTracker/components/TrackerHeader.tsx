@@ -5,6 +5,7 @@ import { useTrackerContext } from "./TrackerProvider";
 import styled from "@emotion/styled";
 import IconButton from "@mui/material/IconButton";
 import SettingsIcon from "@mui/icons-material/Settings";
+import ShareIcon from "@mui/icons-material/Share";
 import Tooltip from "@mui/material/Tooltip";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -38,6 +39,10 @@ const Options = styled.span`
     flex: 0;
 `;
 
+const NormalTypography = styled(Typography)`
+    font-family: "Roboto";
+`;
+
 export function TrackerHeader(props: Props): JSX.Element {
     const {} = props;
     const { data } = useTrackerContext();
@@ -55,19 +60,37 @@ export function TrackerHeader(props: Props): JSX.Element {
         setCharacterTag,
     } = settings;
 
-    const modeDisplay = <Typography color="inherit">Current Mode: {startCase(mode)}</Typography>;
+    const modeDisplay = `v1.1`;
 
     const [showOptions, setShowOptions] = useState(false);
+    const [showShare, setShowShare] = useState(false);
 
     const options = (
-        <>
+        <div style={{ display: "flex" }}>
+            <Tooltip title={"Get OBS Info"}>
+                <IconButton size="small" onClick={() => setShowShare(true)}>
+                    <ShareIcon />
+                </IconButton>
+            </Tooltip>
             <Tooltip title={"Settings"}>
                 <IconButton size="small" onClick={() => setShowOptions(true)}>
                     <SettingsIcon />
                 </IconButton>
             </Tooltip>
-        </>
+        </div>
     );
+    const shareDialog = (
+        <Dialog open={showShare} onBackdropClick={() => setShowShare(false)}>
+            <DialogTitle></DialogTitle>
+            <DialogContent></DialogContent>
+            <DialogActions>
+                <Button variant="outlined" onClick={() => setShowShare(false)}>
+                    Close
+                </Button>
+            </DialogActions>
+        </Dialog>
+    );
+
     const dialog = (
         <Dialog open={showOptions} onBackdropClick={() => setShowOptions(false)}>
             <DialogTitle>Settings</DialogTitle>
@@ -103,7 +126,7 @@ export function TrackerHeader(props: Props): JSX.Element {
                     >
                         <MenuItem value={TrackerBackground.ANGUIREL}>Anguirel (Emotracker Gated View)</MenuItem>
                         <MenuItem value={TrackerBackground.DARK}>Dark (Emotracker Broadcast View)</MenuItem>
-                        <MenuItem value={TrackerBackground.GREEN}>Green</MenuItem>
+                        <MenuItem value={TrackerBackground.TRANSPARENT}>Transparent</MenuItem>
                     </Select>
                 </FormControl>
 
@@ -157,6 +180,7 @@ export function TrackerHeader(props: Props): JSX.Element {
             <div style={{ flex: 1 }}></div>
             <Options>{options}</Options>
             {dialog}
+            {shareDialog}
         </Container>
     );
 }
