@@ -22,6 +22,8 @@ jobs:
         environment: deploy # set up in github settings
         env:
             ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+            ECR_REPO: ff6-tracker
+            TAG: latest
 
         steps:
             - uses: actions/checkout@v2
