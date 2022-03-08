@@ -34,7 +34,7 @@ jobs:
             - name: Build Web
               run: >-
                   docker build -f Dockerfile \
-                    --build-arg PUBLIC_URL=/tracker \
+                    --build-arg PUBLIC_URL=/ \
                     --tag ${ECR_REPO}:${TAG} .
               continue-on-error: false
 
