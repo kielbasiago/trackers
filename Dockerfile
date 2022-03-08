@@ -19,7 +19,7 @@ RUN mv "./build" /app
 ## STAGE 2: Production Environment ###
 FROM nginx:1.18-alpine
 RUN rm -rf /etc/nginx/conf.d
-COPY ["./devops/conf", "/etc/nginx"]
+COPY ["./.devops/conf", "/etc/nginx"]
 COPY --from=nodebuild /app/index.html /usr/share/nginx/html
 COPY --from=nodebuild /app /usr/share/nginx/html
 EXPOSE 80
