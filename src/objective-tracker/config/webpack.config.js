@@ -23,7 +23,6 @@ const ForkTsCheckerWebpackPlugin =
         ? require("react-dev-utils/ForkTsCheckerWarningWebpackPlugin")
         : require("react-dev-utils/ForkTsCheckerWebpackPlugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
-const CopyPlugin = require("copy-webpack-plugin");
 
 const createEnvironmentHash = require("./webpack/persistentCache/createEnvironmentHash");
 
@@ -551,11 +550,6 @@ module.exports = function (webpackEnv) {
                         : undefined
                 )
             ),
-            // new CopyPlugin({
-            // patterns: [
-            // { from: '' }
-            // ]
-            // }),
             // Inlines the webpack runtime script. This script is too small to warrant
             // a network request.
             // https://github.com/facebook/create-react-app/issues/5358
@@ -628,7 +622,8 @@ module.exports = function (webpackEnv) {
             }),
             // Generate a service worker script that will precache, and keep up to date,
             // the HTML & assets that are part of the webpack build.
-            fs.existsSync(swSrc) &&
+            isEnvProduction &&
+                fs.existsSync(swSrc) &&
                 new WorkboxWebpackPlugin.InjectManifest({
                     swSrc,
                     dontCacheBustURLsMatching: /\.[0-9a-f]{8}\./,
