@@ -14,7 +14,7 @@ ARG API_URL
 ENV API_URL $API_URL
 
 RUN yarn build
-RUN mv "./dist/release" /app
+RUN mv "./build" /app
 
 ## STAGE 2: Production Environment ###
 FROM nginx:1.18-alpine

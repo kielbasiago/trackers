@@ -15,29 +15,29 @@ export class GetSaveDataQuery extends Query<GetSaveDataResponse> {
     private EVENT_WORD_ADDRESS: number;
     private EVENT_ADDRESS: number;
     private DRAGON_ADDRESS: number;
-    private GAME_TIME_ADDRESS: number;
+    private CHEST_BITS: number;
 
     constructor() {
         super();
         this.EVENT_WORD_ADDRESS = this.IN_WRAM(0x1fc2);
         this.EVENT_ADDRESS = this.IN_WRAM(0x1e80);
         this.DRAGON_ADDRESS = this.IN_WRAM(0x1dc9);
-        this.GAME_TIME_ADDRESS = this.IN_WRAM(0x1863);
+        this.CHEST_BITS = this.IN_WRAM(0x1e40); // 0x1e40 - 0x1e7f
     }
 
     public get queryAddress(): Array<number> {
-        const addresses = [this.EVENT_WORD_ADDRESS, this.EVENT_ADDRESS, this.DRAGON_ADDRESS, this.GAME_TIME_ADDRESS];
+        const addresses = [this.EVENT_WORD_ADDRESS, this.EVENT_ADDRESS, this.DRAGON_ADDRESS, this.CHEST_BITS];
         return addresses;
     }
 
     public get queryLength(): Array<number> {
-        return [64, 150, 24, 3];
+        return [64, 150, 24, 63];
     }
 
     public async onResponse(responses: Array<Buffer>): Promise<GetSaveDataResponse> {
-        const [EVENT_WORDS, EVENTS, DRAGONS, GAME_TIME] = responses;
+        const [EVENT_WORDS, EVENTS, DRAGONS, CHESTS] = responses;
 
-        const value = this.parseAllData(EVENT_WORDS, EVENTS, DRAGONS, GAME_TIME);
+        const value = this.parseAllData(EVENT_WORDS, EVENTS, DRAGONS, CHESTS);
 
         return value;
     }
@@ -46,7 +46,7 @@ export class GetSaveDataQuery extends Query<GetSaveDataResponse> {
         eventWordsData: Buffer,
         eventsData: Buffer,
         dragonData: Buffer,
-        gameTimeData: Buffer
+        chestData: Buffer
     ): GetSaveDataResponse {
         // PARSE EVENT WORD DATA
         const characterCount = eventWordsData[CHARACTERS_AVAILABLE * 2];
@@ -82,9 +82,22 @@ export class GetSaveDataQuery extends Query<GetSaveDataResponse> {
             return acc;
         }, {} as Record<FF6Dragon, boolean>);
 
-        const [hr, min, sec] = gameTimeData;
+        const chestCount = [...chestData].reduce((acc, chestByte) => {
+            const bitcount = (byte: number) => {
+                let bits = 0;
 
-        const secondsPassed = hr * 3600 + min * 60 + sec;
+                while (byte) {
+                    bits += byte % 2;
+                    byte = byte >>> 1;
+                }
+
+                return bits;
+            };
+
+            acc += bitcount(chestByte);
+
+            return acc;
+        }, 0);
 
         const value = {
             characters,
@@ -101,13 +114,8 @@ export class GetSaveDataQuery extends Query<GetSaveDataResponse> {
             checkCount,
             dragonCount,
             bossCount,
-            // ...dragons,
-            // ...espers,
-            // events: {
-            //     ...special?.events,
-            //     ...events.events,
-            // },
-            gameTime: secondsPassed,
+            gameTime: 0,
+            chestCount,
         } as GetSaveDataResponse;
         return value;
     }

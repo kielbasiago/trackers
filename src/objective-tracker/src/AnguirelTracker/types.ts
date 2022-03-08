@@ -25,6 +25,8 @@ export type GetSaveDataResponse = {
     bossCount: number;
     /** count of checks */
     checkCount: number;
+    /** count of chests */
+    chestCount: number;
     /** game time that has passed */
     gameTime: number;
     events: FF6EventFlags;
@@ -55,7 +57,7 @@ export enum TrackerMode {
 
 export enum TrackerBackground {
     ANGUIREL = "ANGUIREL",
-    GREEN = "GREEN",
+    TRANSPARENT = "TRANSPARENT",
     DARK = "DARK",
 }
 

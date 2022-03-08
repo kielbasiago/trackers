@@ -39,8 +39,7 @@ const BaseContainer = styled.div`
             background: ${characterBackgrounds[c]};
         }
 
-        &.group-${c}-${TrackerBackground.GREEN} {
-            background: #0F0;
+        &.group-${c}-${TrackerBackground.TRANSPARENT} {
         }
     `;
         return retVal;

@@ -56,17 +56,12 @@ export function TrackerCell(props: Props): JSX.Element {
 
         const className = clsx(isAvailable || "gated-cell", active || "inactive-cell", active && "complete-cell");
 
-        const fontSize = "2.2rem";
         const adornmentValue = value;
         const adornment =
             !isAvailable || value === 0 ? null : (
                 <div className={"overlay"}>
                     <div className={clsx("overlay-content", "multicheck-cell-flex-end")}>
-                        <Typography
-                            variant="h6"
-                            className={className}
-                            style={{ fontSize: fontSize, lineHeight: "22px" }}
-                        >
+                        <Typography variant="h6" className={className} style={{ lineHeight: "22px" }}>
                             {adornmentValue}
                         </Typography>
                     </div>
