@@ -31,7 +31,7 @@ export class GetSaveDataQuery extends Query<GetSaveDataResponse> {
     }
 
     public get queryLength(): Array<number> {
-        return [64, 150, 24, 63];
+        return [64, 150, 24, 47];
     }
 
     public async onResponse(responses: Array<Buffer>): Promise<GetSaveDataResponse> {
@@ -95,7 +95,7 @@ export class GetSaveDataQuery extends Query<GetSaveDataResponse> {
             };
 
             acc += bitcount(chestByte);
-
+            console.log(acc);
             return acc;
         }, 0);
 
