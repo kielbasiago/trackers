@@ -60,7 +60,7 @@ export function TrackerHeader(props: Props): JSX.Element {
         setCharacterTag,
     } = settings;
 
-    const modeDisplay = null; //<Typography color="inherit">Current Mode: {startCase(mode)}</Typography>;
+    const modeDisplay = `v1.1`;
 
     const [showOptions, setShowOptions] = useState(false);
     const [showShare, setShowShare] = useState(false);

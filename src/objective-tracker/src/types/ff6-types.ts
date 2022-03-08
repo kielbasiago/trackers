@@ -202,7 +202,7 @@ export const ff6Events = {
     floatingContinent2: "floatingContinent2",
     floatingContinent3: "floatingContinent3",
     /** Cyan checks */
-    doma: "doma",
+    doma: "Doma",
     mtZozo: "mtZozo",
     nightmare1: "nightmare1",
     nightmare2: "nightmare2",
