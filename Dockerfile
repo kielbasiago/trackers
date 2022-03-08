@@ -8,9 +8,7 @@ COPY yarn.lock yarn.lock
 COPY ["./src/objective-tracker/package.json", "src/objective-tracker/package.json"]
 
 RUN yarn install --frozen-lockfile
-COPY src src
-copy .env .env
-COPY node_modules node_modules
+COPY . .
 
 WORKDIR /src/src/objective-tracker
 ARG API_URL 
