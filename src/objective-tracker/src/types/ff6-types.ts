@@ -368,7 +368,10 @@ export const checkToAsset: Record<string, string> = {
 
     charCount: "Char",
     esperCount: "Esper",
-    dragonCount: "GreenDragon",
+    dragonCount: "RedDragonSprite",
+    bossCount: "UltrosSmileIGuess",
+    checkCount: "Imper",
+    chestCount: "Chest",
 
     // terra
     leteRiver: "Ultros",

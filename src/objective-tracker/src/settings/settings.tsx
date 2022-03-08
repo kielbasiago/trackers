@@ -26,7 +26,7 @@ export const ff6FontTheme = {
             fontSize: "1.35em",
         },
         h6: {
-            fontSize: "1.5em",
+            fontSize: "2.2em",
         },
     },
 } as Pick<ThemeOptions, "typography">;

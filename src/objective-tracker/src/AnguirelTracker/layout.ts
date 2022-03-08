@@ -395,8 +395,11 @@ const layout = [
             ),
         ]),
         new LayoutGroup("none", "center", [
-            new LayoutCell("kefkaAtNarshe", "kefkaAtNarshe", ({ events }) => events.kefkaAtNarshe, undefined),
-            new LayoutCell("tzenThief", "tzenThief", ({ events }) => events.tzenThief, undefined),
+            new LayoutNumberCell("bossCount", "bossCount", ({ bossCount }) => bossCount, undefined, { max: 100 }),
+            new LayoutNumberCell("checkCount", "checkCount", ({ checkCount }) => checkCount, undefined, { max: 100 }),
+            new LayoutNumberCell("chestCount", "chestCount", ({ chestCount }) => chestCount, undefined, {
+                max: 255,
+            }),
         ]),
         new LayoutGroup("umaro", "flex-end", [
             new LayoutCell(
@@ -430,6 +433,8 @@ const layout = [
             ),
         ]),
         new LayoutGroup("none", "center", [
+            new LayoutCell("tzenThief", "tzenThief", ({ events }) => events.tzenThief, undefined),
+
             new LayoutNumberCell(
                 "auctionHouse",
                 "auctionHouse",
@@ -442,8 +447,11 @@ const layout = [
                     max: 2,
                 }
             ),
-            new LayoutCell("tritoch", "tritoch", ({ events }) => events.tritoch),
+
+            new LayoutCell("kefkaAtNarshe", "kefkaAtNarshe", ({ events }) => events.kefkaAtNarshe, undefined),
+
             new LayoutCell("doomGaze", "doomGaze", ({ events }) => events.doomGaze),
+            new LayoutCell("tritoch", "tritoch", ({ events }) => events.tritoch),
         ]),
         new LayoutGroup("gogo", "flex-end", [
             new LayoutCell(

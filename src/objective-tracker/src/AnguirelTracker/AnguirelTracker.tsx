@@ -158,8 +158,16 @@ export function AnguirelTracker(props: Props): JSX.Element {
     return (
         <TrackerContext.Provider value={providerData}>
             <Paper
-                style={{ width: 600, minWidth: 600, maxWidth: 600, padding: 8 }}
-                className={clsx(`theme-${background}`, `theme-mode-${themeMode}`)}
+                style={{
+                    width: 600,
+                    minWidth: 600,
+                    maxWidth: 600,
+                    padding: 8,
+                    boxShadow: "none",
+                    height: "100%",
+                    borderRadius: 0,
+                }}
+                className={clsx(`theme-${background}`, `theme-mode-${themeMode} tracker-background`)}
             >
                 <TrackerHeader />
                 <div style={{ position: "relative" }}>
@@ -187,8 +195,14 @@ export function AnguirelTracker(props: Props): JSX.Element {
                         </div>
                     )}
                 </div>
-                <TrackerCounts />
-                <TextField disabled multiline fullWidth maxRows={5} rows={8} value={logs.current.join("\r\n")} />
+                <TextField
+                    disabled
+                    multiline
+                    fullWidth
+                    rows={8}
+                    value={logs.current.join("\r\n")}
+                    style={{ marginTop: 48 }}
+                />
             </Paper>
         </TrackerContext.Provider>
     );
