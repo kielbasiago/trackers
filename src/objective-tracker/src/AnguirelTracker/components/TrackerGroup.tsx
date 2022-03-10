@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "@emotion/styled";
 import { LayoutGroup } from "../layout";
 import clsx from "clsx";
@@ -52,10 +52,18 @@ export const TrackerGroup: React.FC<Props> = (props) => {
     const { children, group } = props;
     const [groupName, justify] = group.args;
     const { background: theme } = useTrackerSettings();
-
+    const targetId = `group-${groupName}-container`;
+    useEffect(() => {
+        document.addEventListener("contextmenu", (e) => {
+            if (document.getElementById(targetId) === e.target) {
+                e.preventDefault();
+            }
+        });
+    }, []);
     return (
         <OuterContainer
             className={clsx(`TrackerGroup`, `group-${groupName}`, `group-${groupName}-${theme}`)}
+            id={targetId}
             style={{ justifyContent: justify }}
         >
             {children}

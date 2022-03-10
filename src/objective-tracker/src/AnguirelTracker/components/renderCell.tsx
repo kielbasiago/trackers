@@ -29,12 +29,13 @@ export function RenderCell(
     const targetId = `${id}-target`;
 
     useEffect(() => {
-        document.addEventListener("contextmenu", (e) => {
+        const callback = (e: MouseEvent) => {
             if (document.getElementById(targetId) === e.target) {
                 e.preventDefault();
             }
-        });
-    }, []);
+        };
+        document.addEventListener("contextmenu", callback);
+    }, [targetId]);
 
     if (!key) {
         return <></>;
