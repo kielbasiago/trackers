@@ -1,11 +1,11 @@
-import { FF6Character, FF6CharacterFlags, FF6EsperFlags, FF6EventFlags, FF6Event } from "../types/ff6-types";
+import { FF6Character } from "../types/ff6-types";
 import { Tuple } from "../utils/Tuple";
-import { GetSaveDataResponse } from "./types";
+import { characterChecks, GetSaveDataResponse } from "./types";
 
 type Callback = (args: GetSaveDataResponse) => boolean | number;
 type DisplayName = string;
 type Key = string;
-type LayoutCellData = [Key, DisplayName, Callback | null, Callback?];
+type LayoutCellData = [Key, DisplayName, Callback, Callback?];
 
 type NumberOptions = {
     /** default 0 */
@@ -15,19 +15,34 @@ type NumberOptions = {
 
 type LayoutNumberCellData = [Key, DisplayName, Callback, Callback?, NumberOptions?];
 
-export class LayoutCell extends Tuple<LayoutCellData> {}
-export class LayoutNumberCell extends Tuple<LayoutNumberCellData> {}
-
+export class LayoutCell extends Tuple<LayoutCellData, boolean> {}
+export class LayoutNumberCell extends Tuple<LayoutNumberCellData, number> {
+    public options: NumberOptions;
+    constructor(...args: LayoutNumberCellData) {
+        super(...args);
+        this.options = args[4] ?? {
+            max: 3,
+            min: 0,
+        };
+    }
+}
 export class CharacterCell extends LayoutNumberCell {
-    public checks: Array<string> = [];
-    public withChecks(checks: Array<string>) {
-        this.checks = checks;
-        return this;
+    constructor(...args: LayoutNumberCellData) {
+        super(...args);
+        const [key] = args;
+
+        this.options = {
+            max: characterChecks[key as FF6Character].length,
+            min: 0,
+        };
+
+        args[4] = this.options;
     }
 }
 
 export class LayoutGroup extends Tuple<
-    [string, "flex-start" | "center" | "flex-end", Array<LayoutCell | LayoutNumberCell>]
+    [string, "flex-start" | "center" | "flex-end", Array<LayoutCell | LayoutNumberCell>],
+    never
 > {}
 
 const layout = [

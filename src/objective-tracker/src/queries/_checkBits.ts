@@ -3,7 +3,7 @@ import { Tuple } from "../utils/Tuple";
 import * as event_bits from "./_eventBits";
 import * as npc_bit from "./_npcBits";
 
-export class NameBit extends Tuple<[string, string, number]> {
+export class NameBit extends Tuple<[string, string, number], never> {
     public readonly byte: number;
     public readonly bit: number;
     public readonly key: string;

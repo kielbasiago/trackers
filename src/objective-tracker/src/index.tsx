@@ -1,6 +1,4 @@
 import CircularProgress from "@mui/material/CircularProgress";
-import Highcharts from "highcharts";
-import addDraggablePoints from "highcharts/modules/draggable-points";
 // STEP 1 - Include Dependencies
 // Include react
 import React from "react";
@@ -10,8 +8,6 @@ import App from "./App";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
-
-addDraggablePoints(Highcharts);
 
 ReactDOM.render(
     <React.StrictMode>

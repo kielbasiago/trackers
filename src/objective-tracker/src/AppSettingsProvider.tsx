@@ -22,6 +22,7 @@ export const AppSettingsProvider: React.FC<Props> = (props) => {
     const qsMode = useQuery("mode");
     const qsBackground = useQuery("background");
     const qsThemeMode = useQuery("themeMode");
+    const qsShowHeader = useQuery("showHeader");
     const nav = useNavigate();
     const location = useLocation();
     const [raw] = useState(
@@ -32,6 +33,7 @@ export const AppSettingsProvider: React.FC<Props> = (props) => {
             background: TrackerBackground.ANGUIREL,
             themeMode: TrackerThemeMode.DARK,
             characterTag: true,
+            showHeader: true,
         } as TrackerSettings)
     );
 
@@ -40,6 +42,9 @@ export const AppSettingsProvider: React.FC<Props> = (props) => {
     const [characterTag, setCharacterTag] = useState<boolean>(
         qsCharacterTag === "false" ? false : defaults.characterTag
     );
+
+    const [showHeader, setShowHeader] = useState<boolean>(qsShowHeader === "false" ? false : defaults.showHeader);
+
     const [font, setFont] = useState<TrackerFont>((qsFont?.toUpperCase() as TrackerFont) ?? defaults.font);
     const [mode, setMode] = useState<TrackerMode>((qsMode?.toUpperCase() as TrackerMode) ?? defaults.mode);
     const [background, setBackground] = useState<TrackerBackground>(
@@ -56,6 +61,7 @@ export const AppSettingsProvider: React.FC<Props> = (props) => {
             mode,
             background,
             themeMode,
+            showHeader,
         } as TrackerSettings;
         const searchVals = Object.keys(val).map((key) => {
             return `${key}=${val[key as keyof typeof val]}`;
@@ -87,6 +93,8 @@ export const AppSettingsProvider: React.FC<Props> = (props) => {
                 setBackground,
                 themeMode,
                 setThemeMode,
+                showHeader,
+                setShowHeader,
             }}
         >
             {children}

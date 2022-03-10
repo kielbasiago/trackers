@@ -1,22 +1,23 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import {
-    FF6Character,
     FF6CharacterFlags,
     ff6Characters,
-    FF6Dragon,
     FF6DragonFlags,
     ff6Dragons,
-    FF6Event,
     FF6EventFlags,
     ff6Events,
 } from "../../types/ff6-types";
+import { LayoutCell, LayoutNumberCell } from "../layout";
 import { GetSaveDataResponse } from "../types";
 
 export type TrackerContextData = {
     data: GetSaveDataResponse;
-    onClick: (key: string, value?: number) => unknown;
-    onRightClick: (key: string, value?: number) => unknown;
-    updateFlag: (flag: string, value: any) => void;
+    onClick: (key: string) => unknown;
+    onRightClick: (key: string) => unknown;
+    updateCell: (cell: LayoutCell, value: boolean) => GetSaveDataResponse;
+    updateNumberCell: (cell: LayoutNumberCell, value: number) => GetSaveDataResponse;
+    updateValue: (key: string, value: any) => GetSaveDataResponse;
+    updateData: (data: GetSaveDataResponse) => void;
 };
 
 export const getTrackerDefaults = () => {
@@ -64,7 +65,10 @@ export const useTrackerContext = () => {
             ...getTrackerDefaults(),
             onClick: () => {},
             onRightClick: () => {},
-            updateFlag: () => {},
+            updateCell: () => getTrackerDefaults().data,
+            updateNumberCell: () => getTrackerDefaults().data,
+            updateValue: () => getTrackerDefaults().data,
+            updateData: () => {},
         } as TrackerContextData;
     }
 

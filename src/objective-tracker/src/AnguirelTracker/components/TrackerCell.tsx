@@ -1,6 +1,8 @@
+import styled from "@emotion/styled";
 import { Typography } from "@mui/material";
 import clsx from "clsx";
 import React from "react";
+import { useTrackerSettings } from "../../settings/settings";
 import { CharacterCell as CharCellType, LayoutCell, LayoutNumberCell } from "../layout";
 import { GetSaveDataResponse } from "../types";
 import CharacterCell from "./cells/CharacterCell";
@@ -10,6 +12,10 @@ import { useTrackerContext } from "./TrackerProvider";
 type Props = {
     cell: LayoutCell | LayoutNumberCell;
 };
+
+const OverlayContainer = styled.div`
+    top: 0;
+`;
 
 /*
     THREE CELL TYPES:
@@ -49,6 +55,7 @@ export function TrackerCell(props: Props): JSX.Element {
         );
     } else if (cell instanceof LayoutNumberCell) {
         const [key, displayName, callback, gated, options = { min: undefined, max: undefined }] = cell.args;
+
         const { max, min = 0 } = options;
         const value = callback(data as GetSaveDataResponse) as number;
         const active = Math.max(min, Math.min(max ?? 3, value)) > 0;
@@ -58,14 +65,14 @@ export function TrackerCell(props: Props): JSX.Element {
 
         const adornmentValue = value;
         const adornment =
-            !isAvailable || value === 0 ? null : (
-                <div className={"overlay"}>
+            value === 0 ? null : (
+                <OverlayContainer className={"overlay"}>
                     <div className={clsx("overlay-content", "multicheck-cell-flex-end")}>
                         <Typography variant="h6" className={className} style={{ lineHeight: "22px" }}>
                             {adornmentValue}
                         </Typography>
                     </div>
-                </div>
+                </OverlayContainer>
             );
 
         return RenderCell(key, displayName, className, "", adornment);
