@@ -56,7 +56,10 @@ export function AnguirelTracker(props: Props): JSX.Element {
                 const [_key, _display, valueCallback, _cb2, options = { min: 0, max: 3 }] = cell.args;
                 const currentValue = valueCallback(trackerData.data) as number;
                 const { min, max } = options;
-                let newValue = Math.max(0, Math.min(currentValue + 1, max));
+                let newValue = 0;
+                if (currentValue < max) {
+                    newValue = Math.max(0, Math.min(currentValue + 1, max));
+                }
                 const newData = providerData.updateNumberCell(cell, newValue);
                 providerData.updateData(newData);
             } else if (cell instanceof LayoutCell) {
@@ -68,10 +71,29 @@ export function AnguirelTracker(props: Props): JSX.Element {
         },
 
         // decrement
-        onRightClick(key: string, value?: number) {
-            const allFlags = trackerData.data.allFlags;
-            const keys = Object.keys(allFlags).filter((z) => z.includes(key));
-            // const item = allFlags[key as unknown as keyof (FF6CharacterFlags & FF6DragonFlags & FF6EventFlags)];
+        onRightClick(key: string) {
+            const cell = getCell(key);
+
+            // magitek, floatingContintent, nightmare, auctionHouse, etc.
+            if (cell == null) {
+                getLogger("AnguirelTracekr--Manual-onRightClick").info(`no cell for key ${key}`);
+                return;
+            }
+
+            if (cell instanceof LayoutCell || cell instanceof CharacterCell) {
+                const newData = providerData.updateValue(cell.args[0], false);
+                providerData.updateData(newData);
+            } else if (cell instanceof LayoutNumberCell) {
+                const [_key, _display, valueCallback, _cb2, options = { min: 0, max: 3 }] = cell.args;
+                const currentValue = valueCallback(trackerData.data) as number;
+                const { min, max } = options;
+                let newValue = 0;
+                if (currentValue > 0) {
+                    newValue = Math.min(max, Math.max(currentValue - 1, 0));
+                }
+                const newData = providerData.updateNumberCell(cell, newValue);
+                providerData.updateData(newData);
+            }
         },
         updateData(newData: GetSaveDataResponse): void {
             setTrackerData({

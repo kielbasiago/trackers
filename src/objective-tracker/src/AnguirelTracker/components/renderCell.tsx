@@ -1,6 +1,6 @@
 import Tooltip from "@mui/material/Tooltip";
 import startCase from "lodash/startCase";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import urljoin from "url-join";
 import { useTrackerSettings } from "../../settings/settings";
 import { checkToAsset } from "../../types/ff6-types";
@@ -22,6 +22,20 @@ export function RenderCell(
 
     const [mouseDownTarget, setMouseDownTarget] = useState<EventTarget | null>(null);
 
+    const containerRef = useRef<HTMLSpanElement | null>(null);
+    const imgRef = useRef<HTMLImageElement | null>(null);
+    const id = `cell-${key}`;
+
+    const targetId = `${id}-target`;
+
+    useEffect(() => {
+        document.addEventListener("contextmenu", (e) => {
+            if (document.getElementById(targetId) === e.target) {
+                e.preventDefault();
+            }
+        });
+    }, []);
+
     if (!key) {
         return <></>;
     }
@@ -31,30 +45,44 @@ export function RenderCell(
     };
     const onMouseUp: React.MouseEventHandler = (e) => {
         if (mouseDownTarget && e.target && e.target === mouseDownTarget) {
-            onClick(key);
+            // value sdescribed here: https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button#value
+            if (e.button === 0) {
+                onClick(key);
+            } else if (e.button === 2) {
+                onRightClick(key);
+                e.preventDefault();
+            }
         }
         setMouseDownTarget(null);
     };
 
     return (
         <Tooltip title={startCase(displayName)}>
-            <span
-                onMouseUp={onMouseUp}
-                onMouseDown={onMouseDown}
-                className={containerClassName}
-                style={{ position: "relative", cursor: (mode === TrackerMode.MANUAL && "pointer") || undefined }}
-            >
-                <img
-                    id={`cell-${key}`}
-                    src={url(checkToAsset[key])}
-                    alt={key}
-                    className={`${className} user-select-none`}
-                    width={64}
-                    height={64}
-                    draggable={false}
-                />
-                {adornment ? adornment : null}
-            </span>
+            <>
+                <span
+                    ref={containerRef}
+                    onMouseUp={onMouseUp}
+                    onMouseDown={onMouseDown}
+                    className={containerClassName}
+                    style={{
+                        position: "relative",
+                        cursor: (mode === TrackerMode.MANUAL && "pointer") || undefined,
+                    }}
+                >
+                    <img
+                        ref={imgRef}
+                        id={id}
+                        src={url(checkToAsset[key])}
+                        alt={key}
+                        className={`${className} user-select-none`}
+                        width={64}
+                        height={64}
+                        draggable={false}
+                    />
+                    {adornment ? adornment : null}
+                    <div className="overlay" id={targetId}></div>
+                </span>
+            </>
         </Tooltip>
     );
 }
