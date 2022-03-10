@@ -1,7 +1,4 @@
-import React from "react";
-import styled from "@emotion/styled";
 import { LayoutNumberCell as CellType } from "../../layout";
-import { RenderCell } from "../renderCell";
 import { useTrackerContext } from "../TrackerProvider";
 
 type Props = {
@@ -16,7 +13,7 @@ export function MulticheckCell(props: Props): JSX.Element {
         return <></>;
     }
 
-    const [key] = cell.value();
+    const [key] = cell.args;
     return <>{key}</>;
 }
 

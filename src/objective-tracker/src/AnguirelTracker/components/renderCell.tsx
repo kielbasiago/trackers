@@ -1,5 +1,6 @@
 import Tooltip from "@mui/material/Tooltip";
-import { useEffect } from "react";
+import startCase from "lodash/startCase";
+import React, { useEffect, useState } from "react";
 import urljoin from "url-join";
 import { useTrackerSettings } from "../../settings/settings";
 import { checkToAsset } from "../../types/ff6-types";
@@ -19,33 +20,41 @@ export function RenderCell(
     const { onClick, onRightClick } = useTrackerContext();
     const { mode } = useTrackerSettings();
 
-    useEffect(() => {}, []);
+    const [mouseDownTarget, setMouseDownTarget] = useState<EventTarget | null>(null);
 
     if (!key) {
         return <></>;
     }
 
-    const clickHandler = mode === TrackerMode.AUTO ? () => {} : onClick;
-    const rightClickHander = mode === TrackerMode.AUTO ? () => {} : onRightClick;
+    const onMouseDown: React.MouseEventHandler = (e) => {
+        setMouseDownTarget(e.target);
+    };
+    const onMouseUp: React.MouseEventHandler = (e) => {
+        if (mouseDownTarget && e.target && e.target === mouseDownTarget) {
+            onClick(key);
+        }
+        setMouseDownTarget(null);
+    };
+
     return (
-        <Tooltip title={displayName}>
-            <>
-                <span
-                    onClick={() => onClick(key)}
-                    className={containerClassName}
-                    style={{ position: "relative", userSelect: "none" }}
-                >
-                    <img
-                        id={`cell-${key}`}
-                        src={url(checkToAsset[key])}
-                        alt={key}
-                        className={className}
-                        width={64}
-                        height={64}
-                    />
-                    {adornment ? adornment : null}
-                </span>
-            </>
+        <Tooltip title={startCase(displayName)}>
+            <span
+                onMouseUp={onMouseUp}
+                onMouseDown={onMouseDown}
+                className={containerClassName}
+                style={{ position: "relative", cursor: (mode === TrackerMode.MANUAL && "pointer") || undefined }}
+            >
+                <img
+                    id={`cell-${key}`}
+                    src={url(checkToAsset[key])}
+                    alt={key}
+                    className={`${className} user-select-none`}
+                    width={64}
+                    height={64}
+                    draggable={false}
+                />
+                {adornment ? adornment : null}
+            </span>
         </Tooltip>
     );
 }

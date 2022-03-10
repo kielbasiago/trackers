@@ -1,13 +1,15 @@
-export class Tuple<T extends Array<any>> {
-    public readonly args: T;
-    constructor(...args: T) {
+import { GetSaveDataResponse } from "../AnguirelTracker/types";
+
+export class Tuple<Args extends Array<any>, ValueType> {
+    public readonly args: Args;
+    constructor(...args: Args) {
         this.args = args;
 
         this.init();
     }
 
-    public value(): T {
-        return this.args;
+    public value(data: GetSaveDataResponse): ValueType {
+        throw new Error("must be overridden");
     }
 
     protected init(): void {}

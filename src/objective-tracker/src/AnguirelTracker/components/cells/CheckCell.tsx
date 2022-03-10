@@ -14,7 +14,7 @@ export function CheckCell(props: Props): JSX.Element {
         return <></>;
     }
 
-    const [key] = cell.value();
+    const [key] = cell.args;
     return <></>;
 }
 

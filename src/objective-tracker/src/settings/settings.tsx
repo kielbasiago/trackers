@@ -9,6 +9,8 @@ export type TrackerSettings = {
     font: TrackerFont;
     /** show tag of character count */
     characterTag: boolean;
+    /** Always true when visiting site, only false when providing link to tracker */
+    showHeader: boolean;
 };
 
 export type FullTrackerSettings = TrackerSettings & {
@@ -17,6 +19,7 @@ export type FullTrackerSettings = TrackerSettings & {
     setFont: (font: TrackerFont) => void;
     setMode: (mode: TrackerMode) => void;
     setCharacterTag: (characterTag: boolean) => void;
+    setShowHeader: (showHeader: boolean) => void;
 };
 
 export const ff6FontTheme = {

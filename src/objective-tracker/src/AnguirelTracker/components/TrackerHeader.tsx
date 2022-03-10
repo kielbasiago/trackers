@@ -105,7 +105,9 @@ export function TrackerHeader(props: Props): JSX.Element {
                             <Tooltip title={`Copy URL to clipboard`}>
                                 <span>
                                     Current URL
-                                    <CopyToClipboard text={window.location.href}>
+                                    <CopyToClipboard
+                                        text={window.location.href.replace("showHeader=true", "showHeader=false")}
+                                    >
                                         <IconButton size="small">
                                             <CopyIcon />
                                         </IconButton>
@@ -169,7 +171,6 @@ export function TrackerHeader(props: Props): JSX.Element {
                         id="tracker-mode-select"
                         value={mode}
                         label="Mode"
-                        disabled
                         variant="standard"
                         onChange={() => setMode(mode === TrackerMode.AUTO ? TrackerMode.MANUAL : TrackerMode.AUTO)}
                     >
