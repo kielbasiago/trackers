@@ -307,7 +307,7 @@ const layout = [
                 "narsheWeaponShop",
                 "narsheWeaponShop",
                 ({ events }) => {
-                    return [events.narsheWeaponShop, events.narsheWeaponShopSecondary].filter((z) => !!z).length;
+                    return [events.narsheWeaponShop1, events.narsheWeaponShop2].filter((z) => !!z).length;
                 },
                 ({ characters }) => characters.locke,
                 {
@@ -381,7 +381,7 @@ const layout = [
             new LayoutNumberCell(
                 "fanaticsTower",
                 "fanaticsTower",
-                ({ events }) => [events.fanaticsTower, events.fanaticsTowerSecondary].filter((z) => !!z).length,
+                ({ events }) => [events.fanaticsTower1, events.fanaticsTower2].filter((z) => !!z).length,
                 ({ characters }) => characters.strago,
                 {
                     max: 2,
@@ -451,7 +451,7 @@ const layout = [
             new LayoutNumberCell(
                 "loneWolf",
                 "loneWolf",
-                ({ events }) => [events.loneWolf, events.loneWolfSecondary].filter((z) => !!z).length,
+                ({ events }) => [events.loneWolf1, events.loneWolf2].filter((z) => !!z).length,
                 ({ characters }) => characters.mog,
                 {
                     max: 2,
