@@ -99,10 +99,19 @@ export const event_bit: Record<FF6Event, NameBit> = {
     whelk: new NameBit("whelk", "Whelk Gate", event_bits.DEFEATED_WHELK),
     zoneEater: new NameBit("zoneEater", "Zone Eater", event_bits.RECRUITED_GOGO_WOR),
     ramuh: new NameBit("ramuh", "Zozo Tower", event_bits.GOT_ZOZO_REWARD),
-    // UNUSED
-    // "": new NameBit("""", "Fanatic's Tower Leader", event_bits.DEFEATED_MAGIMASTER),
-    // "": new NameBit("""", "Lone Wolf Moogle Room", event_bits.GOT_BOTH_REWARDS_LONE_WOLF),
-    // "": new NameBit("""", "Narshe Weapon Shop Mines", event_bits.GOT_BOTH_REWARDS_WEAPON_SHOP),
+    auctionHouse1: new NameBit("auctionHouse1", "Auction House Esper 1", event_bits.AUCTION_BOUGHT_ESPER1),
+    auctionHouse2: new NameBit("auctionHouse2", "Auction House Esper 2", event_bits.AUCTION_BOUGHT_ESPER2),
+    fanaticsTowerSecondary: new NameBit(
+        "fanaticsTowerSecondary",
+        "Fanatic's Tower Leader",
+        event_bits.DEFEATED_MAGIMASTER
+    ),
+    loneWolfSecondary: new NameBit("loneWolfSecondary", "Lone Wolf Moogle Room", event_bits.GOT_BOTH_REWARDS_LONE_WOLF),
+    narsheWeaponShopSecondary: new NameBit(
+        "narsheWeaponShopSecondary",
+        "Narshe Weapon Shop Mines",
+        event_bits.GOT_BOTH_REWARDS_WEAPON_SHOP
+    ),
 } as Record<FF6Event, NameBit>;
 
 export const dragon_bit: Record<FF6Dragon, NameBit> = {

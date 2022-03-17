@@ -8,7 +8,7 @@ import { TrackerMode } from "../types";
 import { useTrackerContext } from "./TrackerProvider";
 
 // const url = (str: string) => urljoin("https://kielbasa.s3.us-east-2.amazonaws.com/autotracker/images", `${str}.png`);
-const url = (str: string) => urljoin(window.location.origin, "images", `${str}.png`);
+export const getAssetUrl = (str: string) => urljoin(window.location.origin, "images", `${str}.png`);
 
 export function RenderCell(
     key: string | null,
@@ -73,7 +73,7 @@ export function RenderCell(
                     <img
                         ref={imgRef}
                         id={id}
-                        src={url(checkToAsset[key])}
+                        src={getAssetUrl(checkToAsset[key])}
                         alt={key}
                         className={`${className} user-select-none`}
                         width={64}

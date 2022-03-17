@@ -159,7 +159,11 @@ export type FF6Event =
     /** Gau checks */
     | "serpentTrench"
     /** Kefka's Tower */
-    | "atmaWeapon";
+    | "atmaWeapon"
+    /** Secondary rewards for checks  */
+    | "fanaticsTowerSecondary"
+    | "loneWolfSecondary"
+    | "narsheWeaponShopSecondary";
 
 export const ff6Events = {
     /** Global checks */

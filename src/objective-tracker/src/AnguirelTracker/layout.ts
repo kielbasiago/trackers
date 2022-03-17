@@ -303,11 +303,16 @@ const layout = [
                 ({ events }) => events.tunnelArmor,
                 ({ characters }) => characters.locke
             ),
-            new LayoutCell(
+            new LayoutNumberCell(
                 "narsheWeaponShop",
                 "narsheWeaponShop",
-                ({ events }) => events.narsheWeaponShop,
-                ({ characters }) => characters.locke
+                ({ events }) => {
+                    return [events.narsheWeaponShop, events.narsheWeaponShopSecondary].filter((z) => !!z).length;
+                },
+                ({ characters }) => characters.locke,
+                {
+                    max: 2,
+                }
             ),
             new LayoutCell(
                 "phoenixCave",
@@ -373,11 +378,14 @@ const layout = [
                 ({ events }) => events.ebotsRock,
                 ({ characters }) => characters.strago
             ),
-            new LayoutCell(
+            new LayoutNumberCell(
                 "fanaticsTower",
                 "fanaticsTower",
-                ({ events }) => events.fanaticsTower,
-                ({ characters }) => characters.strago
+                ({ events }) => [events.fanaticsTower, events.fanaticsTowerSecondary].filter((z) => !!z).length,
+                ({ characters }) => characters.strago,
+                {
+                    max: 2,
+                }
             ),
             new CharacterCell(
                 "strago",
@@ -440,11 +448,14 @@ const layout = [
                 ({ characters }) => characters.mog,
                 ({ characters }) => characters.mog
             ),
-            new LayoutCell(
+            new LayoutNumberCell(
                 "loneWolf",
                 "loneWolf",
-                ({ events }) => events.loneWolf,
-                ({ characters }) => characters.mog
+                ({ events }) => [events.loneWolf, events.loneWolfSecondary].filter((z) => !!z).length,
+                ({ characters }) => characters.mog,
+                {
+                    max: 2,
+                }
             ),
         ]),
         new LayoutGroup("none", "center", [
