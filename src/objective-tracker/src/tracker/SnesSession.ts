@@ -125,6 +125,7 @@ export class SnesSession {
             this._wsClient.onclose = (event) => {
                 // document.getElementById("autotracker_connect_button").disabled = false;
                 this.addLogMessage("Disconnected from QUsb2Snes.");
+                this.status = "ERROR";
                 reject();
             };
 
