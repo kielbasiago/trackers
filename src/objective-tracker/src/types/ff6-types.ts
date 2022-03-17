@@ -109,7 +109,9 @@ export type FF6Event =
     | "mobliz"
     | "ramuh"
     /** Locke checks */
-    | "narsheWeaponShop"
+    | "narsheWeaponShop1"
+    /** Secondary reward behind whelk  */
+    | "narsheWeaponShop2"
     | "phoenixCave"
     | "tunnelArmor"
     /** Setzer checks */
@@ -145,9 +147,11 @@ export type FF6Event =
     /** Strago checks */
     | "burningHouse"
     | "ebotsRock"
-    | "fanaticsTower"
+    | "fanaticsTower1"
+    | "fanaticsTower2"
     /** Mog checks */
-    | "loneWolf"
+    | "loneWolf1"
+    | "loneWolf2"
     /** Edgar checks */
     | "figaroThrone"
     | "figaroCastleEngineRoom"
@@ -159,11 +163,7 @@ export type FF6Event =
     /** Gau checks */
     | "serpentTrench"
     /** Kefka's Tower */
-    | "atmaWeapon"
-    /** Secondary rewards for checks  */
-    | "fanaticsTowerSecondary"
-    | "loneWolfSecondary"
-    | "narsheWeaponShopSecondary";
+    | "atmaWeapon";
 
 export const ff6Events = {
     /** Global checks */
@@ -181,7 +181,8 @@ export const ff6Events = {
     mobliz: "mobliz",
     ramuh: "ramuh",
     /** Locke checks */
-    narsheWeaponShop: "narsheWeaponShop",
+    narsheWeaponShop1: "narsheWeaponShop1",
+    narsheWeaponShop2: "narsheWeaponShop2",
     phoenixCave: "phoenixCave",
     tunnelArmor: "tunnelArmor",
     /** Setzer checks */
@@ -217,7 +218,8 @@ export const ff6Events = {
     /** Strago checks */
     burningHouse: "burningHouse",
     ebotsRock: "ebotsRock",
-    fanaticsTower: "fanaticsTower",
+    fanaticsTower1: "fanaticsTower1",
+    fanaticsTower2: "fanaticsTower2",
     /** Mog checks */
     loneWolf: "loneWolf",
     /** Edgar checks */

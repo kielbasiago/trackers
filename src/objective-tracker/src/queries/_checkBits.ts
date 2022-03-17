@@ -50,7 +50,12 @@ export const event_bit: Record<FF6Event, NameBit> = {
     nightmare3: new NameBit("nightmare3", "Doma Dream Throne", event_bits.GOT_ALEXANDR),
     ebotsRock: new NameBit("ebotsRock", "Ebot's Rock", event_bits.DEFEATED_HIDON),
     esperMountain: new NameBit("esperMountain", "Esper Mountain", event_bits.DEFEATED_ULTROS_ESPER_MOUNTAIN),
-    fanaticsTower: new NameBit("fanaticsTower", "Fanatic's Tower Follower", event_bits.RECRUITED_STRAGO_FANATICS_TOWER),
+    fanaticsTower1: new NameBit(
+        "fanaticsTower1",
+        "Fanatic's Tower Follower",
+        event_bits.RECRUITED_STRAGO_FANATICS_TOWER
+    ),
+    fanaticsTower2: new NameBit("fanaticsTower2", "Fanatic's Tower Follower", event_bits.DEFEATED_MAGIMASTER),
     figaroThrone: new NameBit("figaroThrone", "Figaro Castle Throne", event_bits.NAMED_EDGAR),
     figaroCastleEngineRoom: new NameBit(
         "figaroCastleEngineRoom",
@@ -73,7 +78,8 @@ export const event_bit: Record<FF6Event, NameBit> = {
     atmaWeapon: new NameBit("atmaWeapon", "Kefka's Tower Cell Beast", event_bits.DEFEATED_ATMA),
     kohligen: new NameBit("kohligen", "Kohlingen Cafe", event_bits.RECRUITED_SHADOW_KOHLINGEN),
     leteRiver: new NameBit("leteRiver", "Lete River", event_bits.RODE_RAFT_LETE_RIVER),
-    loneWolf: new NameBit("loneWolf", "Lone Wolf Chase", event_bits.CHASING_LONE_WOLF7),
+    loneWolf1: new NameBit("loneWolf1", "Lone Wolf Chase", event_bits.CHASING_LONE_WOLF7),
+    loneWolf2: new NameBit("loneWolf2", "Lone Wolf Moogle Room", event_bits.GOT_BOTH_REWARDS_LONE_WOLF),
     magitek1: new NameBit("magitek1", "Magitek Factory Trash", event_bits.GOT_IFRIT_SHIVA),
     magitek2: new NameBit("magitek2", "Magitek Factory Guard", event_bits.DEFEATED_NUMBER_024),
     magitek3: new NameBit("magitek3", "Magitek Factory Finish", event_bits.DEFEATED_CRANES),
@@ -81,7 +87,12 @@ export const event_bit: Record<FF6Event, NameBit> = {
     mtKoltz: new NameBit("mtKoltz", "Mt. Kolts", event_bits.DEFEATED_VARGAS),
     mtZozo: new NameBit("mtZozo", "Mt. Zozo", event_bits.FINISHED_MT_ZOZO),
     kefkaAtNarshe: new NameBit("kefkaAtNarshe", "Narshe Battle", event_bits.FINISHED_NARSHE_BATTLE),
-    narsheWeaponShop: new NameBit("narsheWeaponShop", "Narshe Weapon Shop", event_bits.GOT_RAGNAROK),
+    narsheWeaponShop1: new NameBit("narsheWeaponShop1", "Narshe Weapon Shop", event_bits.GOT_RAGNAROK),
+    narsheWeaponShop2: new NameBit(
+        "narsheWeaponShop2",
+        "Narshe Weapon Shop Mines",
+        event_bits.GOT_BOTH_REWARDS_WEAPON_SHOP
+    ),
     operaHouse: new NameBit("operaHouse", "Opera House Disruption", event_bits.FINISHED_OPERA_DISRUPTION),
     owzersMansion: new NameBit("owzersMansion", "Owzer's Mansion", event_bits.DEFEATED_CHADARNOOK),
     phantomTrain: new NameBit("phantomTrain", "Phantom Train", event_bits.GOT_PHANTOM_TRAIN_REWARD),
@@ -101,17 +112,6 @@ export const event_bit: Record<FF6Event, NameBit> = {
     ramuh: new NameBit("ramuh", "Zozo Tower", event_bits.GOT_ZOZO_REWARD),
     auctionHouse1: new NameBit("auctionHouse1", "Auction House Esper 1", event_bits.AUCTION_BOUGHT_ESPER1),
     auctionHouse2: new NameBit("auctionHouse2", "Auction House Esper 2", event_bits.AUCTION_BOUGHT_ESPER2),
-    fanaticsTowerSecondary: new NameBit(
-        "fanaticsTowerSecondary",
-        "Fanatic's Tower Leader",
-        event_bits.DEFEATED_MAGIMASTER
-    ),
-    loneWolfSecondary: new NameBit("loneWolfSecondary", "Lone Wolf Moogle Room", event_bits.GOT_BOTH_REWARDS_LONE_WOLF),
-    narsheWeaponShopSecondary: new NameBit(
-        "narsheWeaponShopSecondary",
-        "Narshe Weapon Shop Mines",
-        event_bits.GOT_BOTH_REWARDS_WEAPON_SHOP
-    ),
 } as Record<FF6Event, NameBit>;
 
 export const dragon_bit: Record<FF6Dragon, NameBit> = {
