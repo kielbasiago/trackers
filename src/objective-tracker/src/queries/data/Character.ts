@@ -4,13 +4,19 @@ export class Character {
     public readonly id: number;
     public readonly name: string;
     public portrait!: Array<Tile>;
+    public sprite!: Array<Tile>;
     constructor(id: number, name: string) {
         this.id = id;
         this.name = name;
     }
 
-    public setPortrait(tile: Array<Tile>) {
-        this.portrait = tile;
+    public setPortrait(tiles: Array<Tile>) {
+        this.portrait = tiles;
+        return this;
+    }
+
+    public setSprite(tiles: Array<Tile>) {
+        this.sprite = tiles;
         return this;
     }
 }

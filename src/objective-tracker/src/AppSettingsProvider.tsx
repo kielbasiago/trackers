@@ -1,7 +1,7 @@
 import { TrackerFont, TrackerMode, TrackerBackground, TrackerThemeMode } from "./AnguirelTracker/types";
 import { useLocation } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { TrackerSettings, TrackerSettingsContext, useTrackerSettings } from "./settings/settings";
+import { TrackerSettings, TrackerSettingsContext } from "./settings/settings";
 import { useNavigate } from "react-router-dom";
 
 type Props = {

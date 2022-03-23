@@ -50,6 +50,8 @@ export const characterChecks: Record<FF6Character, Array<FF6Event>> = {
     umaro: ["umarosCave"],
 };
 
+export const characterNames = Object.keys(characterChecks) as Array<FF6Character>;
+
 export enum TrackerMode {
     AUTO = "AUTO",
     MANUAL = "MANUAL",

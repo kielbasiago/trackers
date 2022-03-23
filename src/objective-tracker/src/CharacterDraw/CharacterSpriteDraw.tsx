@@ -1,12 +1,18 @@
+import times from "lodash/times";
 import React, { useEffect, useRef, useState } from "react";
-import { CharacterPortraitInfoResponse, GetCharacterPortraitInfoQuery } from "../queries/GetCharacterPortraitInfoQuery";
+import { characterNames } from "../AnguirelTracker/types";
+import { Tile } from "../queries/data/Tile";
+import { CharacterSpriteInfoResponse, GetCharacterSpriteInfoQuery } from "../queries/GetCharacterSpriteInfoQuery";
 import { QueryBuilder } from "../tracker/QueryBuilder";
 import { snesSession } from "../tracker/SnesSession";
+import { FF6Character } from "../types/ff6-types";
 import DrawPortrait from "./DrawPortrait";
+import DrawSprite from "./DrawSprite";
+import PaletteDraw from "./PaletteDraw";
 
 type Props = Record<string, unknown>;
 
-export function CharacterDraw(props: Props): JSX.Element {
+export function CharacterSpriteDraw(props: Props): JSX.Element {
     const [session] = useState(snesSession);
     const [qb, setQb] = useState<QueryBuilder>();
     const [initialized, setInitialized] = useState(false);
@@ -17,7 +23,7 @@ export function CharacterDraw(props: Props): JSX.Element {
     const [sendRequest, setSendRequest] = useState(0);
     const [____ignoreRenderVal, setRender] = useState(0);
 
-    const [charData, setCharData] = useState<CharacterPortraitInfoResponse | null>(null);
+    const [charData, setCharData] = useState<CharacterSpriteInfoResponse | null>(null);
 
     useEffect(() => {
         if (session && !qb) {
@@ -47,21 +53,36 @@ export function CharacterDraw(props: Props): JSX.Element {
         setLoadingData(true);
         void (async function () {
             const result = await qb?.send(
-                new GetCharacterPortraitInfoQuery().setLogger((...msgs) => {
+                new GetCharacterSpriteInfoQuery().setLogger((...msgs) => {
                     logs.current.push(...msgs);
                     setRender(Math.random());
                 })
             );
+
             setCharData(result);
         })();
     }, [qb, initialized, charData, loadingData]);
 
-    useEffect(() => {}, [charData]);
-
+    const getFormation = (key: FF6Character) =>
+        [0, 1, 6, 7, 8, 9].map((idx) => charData?.portraits[key].sprite[idx]) as Array<Tile>;
     if (!charData) {
         return <></>;
     }
-    return <DrawPortrait tiles={charData.portraits.terra.portrait} proportion={3} />;
+    return (
+        <>
+            {characterNames.map((name, idx) => {
+                const formation = getFormation(name);
+                return (
+                    <span>
+                        <DrawSprite tiles={formation} key={name} />
+                    </span>
+                );
+            })}
+            {/* {charData.palettes.map((palette, idx) => {
+                return <PaletteDraw palette={palette} key={idx.toString()} />;
+            })} */}
+        </>
+    );
 }
 
-export default React.memo(CharacterDraw);
+export default React.memo(CharacterSpriteDraw);
