@@ -6,7 +6,9 @@ import {
     FF6Dragon,
     FF6CharacterFlags,
     FF6DragonFlags,
+    ff6Characters,
 } from "../types/ff6-types";
+import { LayoutCell, LayoutNumberCell } from "./layout";
 
 export type GetSaveDataResponse = {
     /** set of char ids. If in set, char acquired*/
@@ -50,6 +52,27 @@ export const characterChecks: Record<FF6Character, Array<FF6Event>> = {
     umaro: ["umarosCave"],
 };
 
+export const characterNames = Object.keys(characterChecks) as Array<FF6Character>;
+
+export const characterPalettesByKey: Record<FF6Character, number> = {
+    terra: 2,
+    locke: 1,
+    cyan: 4,
+    shadow: 4,
+    edgar: 0,
+    sabin: 0,
+    celes: 0,
+    strago: 3,
+    relm: 3,
+    setzer: 4,
+    mog: 5,
+    gau: 4,
+    gogo: 1,
+    umaro: 5,
+};
+
+export const characterPalettes = characterNames.map((z) => characterPalettesByKey[z]);
+
 export enum TrackerMode {
     AUTO = "AUTO",
     MANUAL = "MANUAL",
@@ -70,3 +93,18 @@ export enum TrackerThemeMode {
     LIGHT = "light",
     DARK = "dark",
 }
+
+export enum TrackerTab {
+    "GATING" = "GATING",
+    "OBJECTIVE" = "OBJECTIVE",
+}
+
+export type TrackerContextData = {
+    data: GetSaveDataResponse;
+    onClick: (key: string) => unknown;
+    onRightClick: (key: string) => unknown;
+    updateCell: (cell: LayoutCell, value: boolean) => GetSaveDataResponse;
+    updateNumberCell: (cell: LayoutNumberCell, value: number) => GetSaveDataResponse;
+    updateValue: (key: string, value: any) => GetSaveDataResponse;
+    updateData: (data: GetSaveDataResponse) => void;
+};

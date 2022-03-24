@@ -1,25 +1,21 @@
 import { Paper, TextField, Typography } from "@mui/material";
 import clsx from "clsx";
 import last from "lodash/last";
-import times from "lodash/times";
-import { getLogger } from "loglevel";
 import React, { useEffect, useRef, useState } from "react";
 import { GetSaveDataQuery } from "../queries/GetSaveDataQuery";
 import { useTrackerSettings } from "../settings/settings";
 import { QueryBuilder } from "../tracker/QueryBuilder";
 import { snesSession } from "../tracker/SnesSession";
-import { FF6Character, FF6Dragon, FF6Event } from "../types/ff6-types";
 import { sleep } from "../utils/sleep";
+import { useTrackerData } from "../utils/useTrackerData";
 import "./AnguirelTracker.scss";
 import TrackerHeader from "./components/TrackerHeader";
-import { getTrackerDefaults, TrackerContext, TrackerContextData } from "./components/TrackerProvider";
-import { CharacterCell, getCell, layout, LayoutCell, LayoutNumberCell } from "./layout";
+import { getTrackerDefaults, TrackerContext } from "./components/TrackerProvider";
+import { layout } from "./layout";
 import { renderLayout } from "./layoutRender";
-import { GetSaveDataResponse, TrackerMode } from "./types";
+import { TrackerMode } from "./types";
 
 type Props = Record<string, unknown>;
-
-type DataKey = keyof GetSaveDataResponse;
 
 export function AnguirelTracker(props: Props): JSX.Element {
     const [session] = useState(snesSession);
@@ -30,129 +26,11 @@ export function AnguirelTracker(props: Props): JSX.Element {
     const [trackerData, setTrackerData] = useState(getTrackerDefaults());
     const { mode, background, themeMode, showHeader } = useTrackerSettings();
 
-    const { data } = trackerData;
-
-    const providerData = {
-        ...trackerData,
-        // increment
-        onClick(key: string) {
-            if (mode === TrackerMode.AUTO) {
-                return;
-            }
-
-            const cell = getCell(key);
-            // magitek, floatingContintent, nightmare, auctionHouse, etc.
-            if (cell == null) {
-                getLogger("AnguirelTracekr--Manual-onClick").info(`no cell for key ${key}`);
-                return;
-            }
-
-            if (cell instanceof CharacterCell) {
-                const [key, _display, valueCallback, _cb2] = cell.args;
-                const currentValue = valueCallback(trackerData.data) as boolean;
-                const newData = providerData.updateValue(key, !currentValue);
-                providerData.updateData(newData);
-            } else if (cell instanceof LayoutNumberCell) {
-                const [_key, _display, valueCallback, _cb2, options = { min: 0, max: 3 }] = cell.args;
-                const currentValue = valueCallback(trackerData.data) as number;
-                const { min, max } = options;
-                let newValue = 0;
-                if (currentValue < max) {
-                    newValue = Math.max(0, Math.min(currentValue + 1, max));
-                }
-                const newData = providerData.updateNumberCell(cell, newValue);
-                providerData.updateData(newData);
-            } else if (cell instanceof LayoutCell) {
-                const [_key, _displayName, valueCallback] = cell.args;
-                const currentValue = valueCallback(trackerData.data) as boolean;
-                const newData = providerData.updateCell(cell, !currentValue);
-                providerData.updateData(newData);
-            }
-        },
-
-        // decrement
-        onRightClick(key: string) {
-            const cell = getCell(key);
-
-            // magitek, floatingContintent, nightmare, auctionHouse, etc.
-            if (cell == null) {
-                getLogger("AnguirelTracekr--Manual-onRightClick").info(`no cell for key ${key}`);
-                return;
-            }
-
-            if (cell instanceof LayoutCell || cell instanceof CharacterCell) {
-                const newData = providerData.updateValue(cell.args[0], false);
-                providerData.updateData(newData);
-            } else if (cell instanceof LayoutNumberCell) {
-                const [_key, _display, valueCallback, _cb2, options = { min: 0, max: 3 }] = cell.args;
-                const currentValue = valueCallback(trackerData.data) as number;
-                const { min, max } = options;
-                let newValue = 0;
-                if (currentValue > 0) {
-                    newValue = Math.min(max, Math.max(currentValue - 1, 0));
-                }
-                const newData = providerData.updateNumberCell(cell, newValue);
-                providerData.updateData(newData);
-            }
-        },
-        updateData(newData: GetSaveDataResponse): void {
-            setTrackerData({
-                ...trackerData,
-                data: newData,
-            });
-        },
-        updateNumberCell(cell, value): GetSaveDataResponse {
-            const rawkey = cell.args[0];
-            const opts = cell.args[4] ?? {
-                min: 0,
-                max: 3,
-            };
-
-            if (trackerData.data[rawkey as DataKey] != null) {
-                const latestData = providerData.updateValue(rawkey, value);
-                return latestData;
-            }
-
-            const checkKeys = times(opts.max, (idx) => `${rawkey}${idx + 1}`);
-            let latestData: GetSaveDataResponse | null = trackerData.data;
-            checkKeys.forEach((val, idx) => {
-                // working with index of 1
-                idx++;
-                latestData = providerData.updateValue(val, value >= idx);
-            });
-
-            return latestData as GetSaveDataResponse;
-        },
-        updateCell(cell, value): GetSaveDataResponse {
-            const data = providerData.updateValue(cell.args[0], value);
-            return data;
-        },
-        updateValue(flag, value): GetSaveDataResponse {
-            const character = trackerData.data.characters[flag as FF6Character] != null;
-            const event = trackerData.data.events[flag as FF6Event] != null;
-            const dragon = trackerData.data.dragons[flag as FF6Dragon] != null;
-            const global = trackerData.data[flag as DataKey] != null;
-
-            if (global) {
-                const f = flag as DataKey;
-                trackerData.data[f] = value;
-            } else if (character) {
-                const f = flag as FF6Character;
-                trackerData.data.allFlags[f] = value;
-                trackerData.data.characters[f] = value;
-            } else if (event) {
-                const f = flag as FF6Event;
-                trackerData.data.allFlags[f] = value;
-                trackerData.data.events[f] = value;
-            } else if (dragon) {
-                const f = flag as FF6Dragon;
-                trackerData.data.allFlags[f] = value;
-                trackerData.data.dragons[f] = value;
-            }
-
-            return trackerData.data;
-        },
-    } as TrackerContextData;
+    const providerData = useTrackerData({
+        mode,
+        setTrackerData,
+        trackerData,
+    });
 
     const logs = useRef<Array<string>>([]);
     const [sendRequest, setSendRequest] = useState(0);

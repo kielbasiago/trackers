@@ -8,17 +8,7 @@ import {
     ff6Events,
 } from "../../types/ff6-types";
 import { LayoutCell, LayoutNumberCell } from "../layout";
-import { GetSaveDataResponse } from "../types";
-
-export type TrackerContextData = {
-    data: GetSaveDataResponse;
-    onClick: (key: string) => unknown;
-    onRightClick: (key: string) => unknown;
-    updateCell: (cell: LayoutCell, value: boolean) => GetSaveDataResponse;
-    updateNumberCell: (cell: LayoutNumberCell, value: number) => GetSaveDataResponse;
-    updateValue: (key: string, value: any) => GetSaveDataResponse;
-    updateData: (data: GetSaveDataResponse) => void;
-};
+import { GetSaveDataResponse, TrackerContextData } from "../types";
 
 export const getTrackerDefaults = () => {
     const characters = Object.keys(ff6Characters).reduce((acc, key) => {
