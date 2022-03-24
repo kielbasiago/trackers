@@ -45,6 +45,7 @@ export const getTrackerDefaults = () => {
         },
         bossCount: 0,
         characterCount: 0,
+        chestCount: 0,
         checkCount: 0,
         dragonCount: 0,
         esperCount: 0,
