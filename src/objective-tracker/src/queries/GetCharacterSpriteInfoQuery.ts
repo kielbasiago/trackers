@@ -3,7 +3,7 @@ import times from "lodash/times";
 import flatten from "lodash/flatten";
 import { Tile } from "./data/Tile";
 import { Palette } from "./data/Palette";
-import { characterChecks } from "../AnguirelTracker/types";
+import { characterChecks, characterPalettes } from "../AnguirelTracker/types";
 import { FF6Character } from "../types/ff6-types";
 import { Character } from "./data/Character";
 
@@ -82,7 +82,7 @@ export class GetCharacterSpriteInfoQuery extends Query<CharacterSpriteInfoRespon
         });
 
         const tiles = graphicBlocks.map((z, idx) => {
-            const palette = palettes[0];
+            const palette = palettes[characterPalettes[idx]];
             const tileCount = PAGE_SIZE / TILE_SIZE;
             const tileSize = 32;
             // const paletteOffset = idx * PALETTE_BLOCK_SIZE;

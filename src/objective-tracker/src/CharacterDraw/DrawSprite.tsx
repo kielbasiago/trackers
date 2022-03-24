@@ -8,7 +8,7 @@ type Props = {
 };
 
 const DrawSprite: React.FC<Props> = (props: Props) => {
-    const { tiles, proportion = 2 } = props;
+    const { tiles, proportion = 1 } = props;
     const ref = useRef<HTMLCanvasElement | null>(null);
     useEffect(() => {
         if (!ref.current) {
@@ -23,17 +23,22 @@ const DrawSprite: React.FC<Props> = (props: Props) => {
 
         let row = 0;
         let col = 0;
-        const PIXELS_PER_ROW = 8;
-        const PIXELS_PER_COLUMN = 8;
+        const PIXELS_PER_ROW = 8 * proportion;
+        const PIXELS_PER_COLUMN = 8 * proportion;
 
-        const getXOffset = () => col * (1.4 * PIXELS_PER_ROW);
-        const getYOffset = () => row * (1 * PIXELS_PER_COLUMN);
+        const getXOffset = () => col * PIXELS_PER_ROW;
+        const getYOffset = () => row * PIXELS_PER_COLUMN;
 
-        tiles.forEach((tile) => {
-            tile.map.forEach((cell) => {
+        tiles.forEach((tile, tiledx) => {
+            tile.map.forEach((cell, idx) => {
                 const fillStyle = tile.palette.colors[cell.value];
                 context.fillStyle = fillStyle.toCss();
-                context.fillRect(cell.x + getXOffset(), cell.y + getYOffset(), 4, 4);
+                context.fillRect(
+                    cell.x * proportion + getXOffset(),
+                    cell.y * proportion + getYOffset(),
+                    Math.floor(proportion),
+                    Math.floor(proportion)
+                );
             });
             col += 1;
             if (col > 1) {

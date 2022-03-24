@@ -20,17 +20,16 @@ export class Palette {
             const b1b = padStart(b1.toString(2), 8, "0");
             const b2b = padStart(b2.toString(2), 8, "0");
             const byteString = b1b.concat(b2b); // get 16 bit byte string
-            // const rawr = byteString.slice(11, 16);
-            // const rawg = byteString.slice(6, 11);
-            // const rawb = byteString.slice(1, 6);
+
             const rawr = byteString.slice(11, 16);
             const rawg = byteString.slice(6, 11);
             const rawb = byteString.slice(1, 6);
-            const r = Number.parseInt(rawr, 2); // * 8;
-            const g = Number.parseInt(rawg, 2); // * 8;
-            const b = Number.parseInt(rawb, 2); // * 8;
 
-            this.colors[i] = new PaletteColor(r, g, b);
+            const r = i === 0 ? 31 : Number.parseInt(rawr, 2); // * 8;
+            const g = i === 0 ? 0 : Number.parseInt(rawg, 2); // * 8;
+            const b = i === 0 ? 0 : Number.parseInt(rawb, 2); // * 8;
+
+            this.colors[i] = new PaletteColor(r, g, b, i === 0 ? 0 : 1);
         }
 
         return this;

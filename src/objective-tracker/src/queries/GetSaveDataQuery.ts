@@ -95,7 +95,6 @@ export class GetSaveDataQuery extends Query<GetSaveDataResponse> {
             };
 
             acc += bitcount(chestByte);
-            console.log(acc);
             return acc;
         }, 0);
 

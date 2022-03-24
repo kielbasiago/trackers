@@ -61,7 +61,7 @@ export function CharacterDraw(props: Props): JSX.Element {
     if (!charData) {
         return <></>;
     }
-    return <DrawPortrait tiles={charData.portraits.terra.portrait} proportion={3} />;
+    return <DrawPortrait tiles={charData.portraits.terra.portrait} proportion={5} />;
 }
 
 export default React.memo(CharacterDraw);
