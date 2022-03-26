@@ -103,7 +103,7 @@ export function CharacterCell(props: Props): JSX.Element {
         />
     );
 
-    return RenderCell(key, render, displayName, className, "", showAdornment ? adornment : null);
+    return RenderCell(key, render, displayName, className, "", showAdornment ? adornment : null, { min, max, value });
 }
 
 export default CharacterCell;

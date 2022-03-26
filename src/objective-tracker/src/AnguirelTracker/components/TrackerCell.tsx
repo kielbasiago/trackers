@@ -74,7 +74,8 @@ export function TrackerCell(props: Props): JSX.Element {
             displayName,
             clsx(isAvailable || "gated-cell", completed || "inactive-cell", completed && "complete-cell"),
             "",
-            null
+            null,
+            { min: 0, max: 1, value: Number.isFinite(value) ? value || 0 : 0 }
         );
     } else if (cell instanceof LayoutNumberCell) {
         const [key, displayName, callback, gated, options = { min: undefined, max: undefined }] = cell.args;
@@ -111,7 +112,7 @@ export function TrackerCell(props: Props): JSX.Element {
                 draggable={false}
             />
         );
-        return RenderCell(key, render, displayName, className, "", adornment);
+        return RenderCell(key, render, displayName, className, "", adornment, { min, max, value });
     }
 
     return <></>;

@@ -13,7 +13,12 @@ export function RenderCell(
     displayName: string,
     className: string,
     containerClassName: string,
-    adornment: React.ReactNode
+    adornment: React.ReactNode,
+    opts?: {
+        min?: number;
+        max?: number;
+        value?: number;
+    }
 ): JSX.Element {
     const { onClick, onRightClick } = useTrackerContext();
     const { mode } = useTrackerSettings();
@@ -55,6 +60,14 @@ export function RenderCell(
     };
 
     const onWheel: React.WheelEventHandler = (e) => {
+        const isUp = e.deltaY < 0;
+        const isDown = e.deltaY > 0;
+        if (opts && opts?.value === opts?.max && isUp) {
+            return;
+        }
+        if (opts && opts.value === opts?.min && isDown) {
+            return;
+        }
         const event: React.MouseEvent = {
             ...e,
             button: e.deltaY < 0 ? 0 : 2,
