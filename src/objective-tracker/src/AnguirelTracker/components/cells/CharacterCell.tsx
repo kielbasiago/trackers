@@ -42,7 +42,7 @@ export function CharacterCell(props: Props): JSX.Element {
 
     const [k, displayName, callback, gated, options = { min: undefined, max: undefined }] = cell.args;
     const key = k as FF6Character;
-    const { max, min = 0 } = options;
+    const { max = 1, min = 0 } = options;
     const value = callback(data) as number;
     const active = Math.max(min, Math.min(max ?? 3, value)) > 0;
     const isAvailable = gated ? gated(data) : true;

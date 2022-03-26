@@ -1,8 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { CharacterPortraitInfoResponse, GetCharacterPortraitInfoQuery } from "../queries/GetCharacterPortraitInfoQuery";
+import {
+    CharacterSpriteInfoResponse as CharacterPortraitInfoResponse,
+    GetCharacterSpriteInfoQuery as GetCharacterPortraitInfoQuery,
+} from "../queries/GetCharacterSpriteInfoQuery";
 import { QueryBuilder } from "../tracker/QueryBuilder";
 import { snesSession } from "../tracker/SnesSession";
-import DrawPortrait from "./DrawPortrait";
+import DrawPortrait from "./DrawSprite";
 
 type Props = Record<string, unknown>;
 
