@@ -4,10 +4,11 @@ import { CharacterCell as CellType } from "../../layout";
 import { useTrackerContext } from "../TrackerProvider";
 import { characterChecks, GetSaveDataResponse } from "../../types";
 import Typography from "@mui/material/Typography";
-import { FF6Character } from "../../../types/ff6-types";
+import { checkToAsset, FF6Character } from "../../../types/ff6-types";
 import clsx from "clsx";
 import { RenderCell } from "../renderCell";
 import { useTrackerSettings } from "../../../settings/settings";
+import { getAssetUrl } from "../../../utils/getAssetUrl";
 
 type Props = {
     cell: CellType;
@@ -89,7 +90,20 @@ export function CharacterCell(props: Props): JSX.Element {
             </div>
         );
 
-    return RenderCell(key, displayName, className, "", showAdornment ? adornment : null);
+    const id = `cell-${key}`;
+    const render = (
+        <img
+            id={id}
+            src={getAssetUrl(checkToAsset[key])}
+            alt={key}
+            className={`${className} user-select-none`}
+            width={64}
+            height={64}
+            draggable={false}
+        />
+    );
+
+    return RenderCell(key, render, displayName, className, "", showAdornment ? adornment : null);
 }
 
 export default CharacterCell;

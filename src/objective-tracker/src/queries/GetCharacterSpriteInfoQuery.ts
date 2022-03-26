@@ -41,6 +41,7 @@ export class GetCharacterSpriteInfoQuery extends Query<CharacterSpriteInfoRespon
     public get queryAddress(): Array<number> {
         return [
             this.IN_ROM(0xd0f1), // character sprite tile formation 0xC0D0F1 - 0xC0CE3A = 0x2B7;
+            this.IN_ROM(0x17e960), // magicite graphics
             this.CHARATER_SPRITE_PALETTES_ADDRESS,
             ...this.CHARACTER_SPRITE_GRAPHICS_ADDRESSES,
         ];
@@ -49,13 +50,14 @@ export class GetCharacterSpriteInfoQuery extends Query<CharacterSpriteInfoRespon
     public get queryLength(): Array<number> {
         return [
             695, //0xC0D0F1 - 0xC0CE3A = 0x2B7 = 695
+            0xa0, // magicite graphics
             0x3ff,
             ...this.CHARACTER_SPRITE_GRAPHICS_ADDRESS_LENGTHS,
         ];
     }
 
     public async onResponse(responses: Array<Buffer>): Promise<CharacterSpriteInfoResponse> {
-        const [TILE_INFO, PALETTE, ...GRAPHICS] = responses;
+        const [TILE_INFO, MAGICITE_GRAPHICS, PALETTE, ...GRAPHICS] = responses;
         const PALETTE_BLOCK_SIZE = 32;
 
         const rawGraphicBlocks = GRAPHICS.map((g) =>
@@ -93,10 +95,10 @@ export class GetCharacterSpriteInfoQuery extends Query<CharacterSpriteInfoRespon
             });
         });
 
-        const val = Object.keys(characterChecks).reduce((acc, val, idx) => {
+        const val = Object.keys(characterChecks).reduce((acc, charName, idx) => {
             const tile = tiles[idx];
-            const char = new Character(idx, val).setSprite(tile);
-            acc[val] = char;
+            const char = new Character(idx, charName).setSprite(tile);
+            acc[charName] = char;
             return acc;
         }, {} as Record<string, Character>);
 

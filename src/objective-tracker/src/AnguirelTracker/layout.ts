@@ -206,10 +206,10 @@ const layout = [
 
         new LayoutGroup("none", "center", [
             new LayoutNumberCell(
-                "charCount",
-                "charCount",
-                ({ characters }) => {
-                    return Object.values(characters).filter((z) => !!z).length;
+                "characterCount",
+                "characterCount",
+                ({ characters, characterCount }) => {
+                    return characterCount > 0 ? characterCount : Object.values(characters).filter((z) => !!z).length;
                 },
                 undefined,
                 {
@@ -363,7 +363,15 @@ const layout = [
             ),
         ]),
         new LayoutGroup("none", "center", [
-            new LayoutNumberCell("dragonCount", "dragonCount", ({ dragonCount }) => dragonCount, undefined, { max: 8 }),
+            new LayoutNumberCell(
+                "dragonCount",
+                "dragonCount",
+                ({ dragonCount, dragons }) => {
+                    return dragonCount > 0 ? dragonCount : Object.values(dragons).filter((z) => !!z).length;
+                },
+                undefined,
+                { max: 8 }
+            ),
         ]),
         new LayoutGroup("strago", "flex-end", [
             new LayoutCell(
@@ -419,7 +427,17 @@ const layout = [
         ]),
         new LayoutGroup("none", "center", [
             new LayoutNumberCell("bossCount", "bossCount", ({ bossCount }) => bossCount, undefined, { max: 100 }),
-            new LayoutNumberCell("checkCount", "checkCount", ({ checkCount }) => checkCount, undefined, { max: 100 }),
+            new LayoutNumberCell(
+                "checkCount",
+                "checkCount",
+                ({ checkCount, events, dragons }) => {
+                    return checkCount > 0
+                        ? checkCount
+                        : Object.values({ ...events, ...dragons }).filter((z) => !!z).length;
+                },
+                undefined,
+                { max: 100 }
+            ),
             new LayoutNumberCell("chestCount", "chestCount", ({ chestCount }) => chestCount, undefined, {
                 max: 255,
             }),

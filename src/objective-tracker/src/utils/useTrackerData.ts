@@ -69,10 +69,12 @@ export function useTrackerData(props: UseTrackerDataProps) {
             } else if (cell instanceof LayoutNumberCell) {
                 const [_key, _display, valueCallback, _cb2, options = { min: 0, max: 3 }] = cell.args;
                 const currentValue = valueCallback(trackerData.data) as number;
-                const { min, max } = options;
-                let newValue = 0;
-                if (currentValue > 0) {
+                const { min = 0, max } = options;
+                let newValue = currentValue - 1;
+                if (currentValue > min) {
                     newValue = Math.min(max, Math.max(currentValue - 1, 0));
+                } else {
+                    newValue = max;
                 }
                 const newData = providerData.updateNumberCell(cell, newValue);
                 providerData.updateData(newData);

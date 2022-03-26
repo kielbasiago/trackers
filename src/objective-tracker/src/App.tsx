@@ -9,6 +9,7 @@ import { normalFontTheme, ff6FontTheme } from "./settings/settings";
 import { useLocation } from "react-router-dom";
 
 const AnguirelTracker = React.lazy(() => import("./AnguirelTracker/AnguirelTracker"));
+const AnguirelTrackerSimple = React.lazy(() => import("./AnguirelTracker/AnguirelTrackerSimple"));
 
 function App() {
     const [theme, setTheme] = useState<Theme>(
@@ -38,6 +39,7 @@ function App() {
             <AppSettingsProvider onThemeUpdate={(font, themeMode) => onThemeUpdate(font, themeMode)}>
                 <Routes>
                     <Route path="/" element={<AnguirelTracker />} />
+                    <Route path="/simple" element={<AnguirelTrackerSimple />} />
                 </Routes>
             </AppSettingsProvider>
         </ThemeProvider>
