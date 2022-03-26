@@ -11,6 +11,7 @@ import CharacterDraw from "./CharacterDraw/CharacterPortraitDraw";
 import CharacterSpriteDraw from "./CharacterDraw/CharacterSpriteDraw";
 
 const AnguirelTracker = React.lazy(() => import("./AnguirelTracker/AnguirelTracker"));
+const AnguirelTrackerSimple = React.lazy(() => import("./AnguirelTracker/AnguirelTrackerSimple"));
 
 function App() {
     const [theme, setTheme] = useState<Theme>(
@@ -41,6 +42,7 @@ function App() {
                 <Routes>
                     <Route path="/test" element={<CharacterSpriteDraw />} />
                     <Route path="/" element={<AnguirelTracker />} />
+                    <Route path="/simple" element={<AnguirelTrackerSimple />} />
                 </Routes>
             </AppSettingsProvider>
         </ThemeProvider>

@@ -65,7 +65,7 @@ export function TrackerHeader(props: Props): JSX.Element {
         setCharacterTag,
     } = settings;
 
-    const modeDisplay = `v1.2`;
+    const modeDisplay = `v1.2 ${mode}`;
 
     const [showOptions, setShowOptions] = useState(false);
     const [showShare, setShowShare] = useState(false);

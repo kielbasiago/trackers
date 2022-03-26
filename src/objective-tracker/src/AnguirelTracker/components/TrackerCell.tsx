@@ -2,12 +2,13 @@ import styled from "@emotion/styled";
 import { Typography } from "@mui/material";
 import clsx from "clsx";
 import React from "react";
-import { useTrackerSettings } from "../../settings/settings";
 import { CharacterCell as CharCellType, LayoutCell, LayoutNumberCell } from "../layout";
 import { GetSaveDataResponse } from "../types";
 import CharacterCell from "./cells/CharacterCell";
 import { RenderCell } from "./renderCell";
 import { useTrackerContext } from "./TrackerProvider";
+import { checkToAsset } from "../../types/ff6-types";
+import { getAssetUrl } from "../../utils/getAssetUrl";
 
 type Props = {
     cell: LayoutCell | LayoutNumberCell;
@@ -44,10 +45,32 @@ export function TrackerCell(props: Props): JSX.Element {
         const value = callback(data as GetSaveDataResponse);
         const completed = value as boolean;
 
+        const id = `cell-${key}`;
+
         const isAvailable = gated ? gated(data as GetSaveDataResponse) : true;
+        const isComplete = !!value;
+
+        const className = clsx(
+            isAvailable || "gated-cell",
+            isComplete || "inactive-cell",
+            isComplete && "complete-cell"
+        );
+
+        const render = (
+            <img
+                id={id}
+                src={getAssetUrl(checkToAsset[key])}
+                alt={key}
+                className={`${className} user-select-none`}
+                width={64}
+                height={64}
+                draggable={false}
+            />
+        );
 
         return RenderCell(
             key,
+            render,
             displayName,
             clsx(isAvailable || "gated-cell", completed || "inactive-cell", completed && "complete-cell"),
             "",
@@ -75,7 +98,20 @@ export function TrackerCell(props: Props): JSX.Element {
                 </OverlayContainer>
             );
 
-        return RenderCell(key, displayName, className, "", adornment);
+        const id = `cell-${key}`;
+
+        const render = (
+            <img
+                id={id}
+                src={getAssetUrl(checkToAsset[key])}
+                alt={key}
+                className={`${className} user-select-none`}
+                width={64}
+                height={64}
+                draggable={false}
+            />
+        );
+        return RenderCell(key, render, displayName, className, "", adornment);
     }
 
     return <></>;

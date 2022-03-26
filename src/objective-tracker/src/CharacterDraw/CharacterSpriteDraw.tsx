@@ -149,7 +149,7 @@ export function CharacterSpriteDraw(props: Props): JSX.Element {
                     <StyledContainer>
                         {charOrder.map((name, idx) => {
                             const d = providerData.data.characters[name as FF6Character];
-                            const formation = getFormation2(name as FF6Character);
+                            const formation = getFormation(name as FF6Character);
                             return (
                                 <StyledChar active={d} key={name}>
                                     <div style={{ position: "relative" }}></div>

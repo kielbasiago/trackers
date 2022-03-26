@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "@emotion/styled";
-import { getAssetUrl } from "../renderCell";
+import { getAssetUrl } from "../../../utils/getAssetUrl";
 
 type Props = Record<string, unknown>;
 
