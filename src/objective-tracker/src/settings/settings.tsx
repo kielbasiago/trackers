@@ -1,6 +1,6 @@
 import { createTheme, ThemeOptions } from "@mui/material";
 import React, { useState } from "react";
-import { TrackerFont, TrackerMode, TrackerBackground, TrackerThemeMode } from "../AnguirelTracker/types";
+import { TrackerFont, TrackerMode, TrackerBackground, TrackerThemeMode, LayoutTypes } from "../AnguirelTracker/types";
 
 export type TrackerSettings = {
     mode: TrackerMode;
@@ -11,6 +11,7 @@ export type TrackerSettings = {
     characterTag: boolean;
     /** Always true when visiting site, only false when providing link to tracker */
     showHeader: boolean;
+    layoutType: LayoutTypes;
 };
 
 export type FullTrackerSettings = TrackerSettings & {
@@ -20,6 +21,7 @@ export type FullTrackerSettings = TrackerSettings & {
     setMode: (mode: TrackerMode) => void;
     setCharacterTag: (characterTag: boolean) => void;
     setShowHeader: (showHeader: boolean) => void;
+    setLayoutType: (layoutType: LayoutTypes) => void;
 };
 
 export const ff6FontTheme = {
@@ -44,17 +46,6 @@ export const normalFontTheme = {
 } as Pick<ThemeOptions, "typography">;
 
 const noop = () => {};
-export const TrackerSettingsContext = React.createContext<FullTrackerSettings>({
-    // font: TrackerFont.DEFAULT,
-    // mode: TrackerMode.AUTO,
-    // themeMode: "dark",
-    // theme: TrackerTheme.ANGUIREL,
-    // characterTag: false,
-    // setFont: noop,
-    // setMode: noop,
-    // setTheme: noop,
-    // setThemeMode: noop,
-    // setCharacterTag: noop,
-} as FullTrackerSettings);
+export const TrackerSettingsContext = React.createContext<FullTrackerSettings>({} as FullTrackerSettings);
 
 export const useTrackerSettings = () => React.useContext(TrackerSettingsContext);

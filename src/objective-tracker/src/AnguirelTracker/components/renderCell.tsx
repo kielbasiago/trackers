@@ -62,12 +62,14 @@ export function RenderCell(
     const onWheel: React.WheelEventHandler = (e) => {
         const isUp = e.deltaY < 0;
         const isDown = e.deltaY > 0;
-        if (opts && opts?.value === opts?.max && isUp) {
+        const v = typeof opts?.value === "number" ? opts?.value : opts?.value === true ? 1 : 0;
+        if (opts && v === opts?.max && isUp) {
             return;
         }
-        if (opts && opts.value === opts?.min && isDown) {
+        if (opts && v === opts?.min && isDown) {
             return;
         }
+
         const event: React.MouseEvent = {
             ...e,
             button: e.deltaY < 0 ? 0 : 2,

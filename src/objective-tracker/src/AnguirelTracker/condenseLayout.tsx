@@ -73,6 +73,128 @@ const condenseLayout = [
     // ],
 ];
 
+export const rowLayout = [
+    [
+        /*********************** ROW 3 ***********************/
+        new LayoutGroup("none", "center", [
+            new LayoutNumberCell(
+                "characterCount",
+                "characterCount",
+                ({ characters, characterCount }) => {
+                    return characterCount > 0 ? characterCount : Object.values(characters).filter((z) => !!z).length;
+                },
+                undefined,
+                {
+                    min: 1,
+                    max: 14,
+                }
+            ),
+            new LayoutNumberCell(
+                "esperCount",
+                "esperCount",
+                ({ esperCount }) => {
+                    return esperCount;
+                },
+                undefined,
+                {
+                    max: 27,
+                }
+            ),
+            new LayoutNumberCell(
+                "dragonCount",
+                "dragonCount",
+                ({ dragonCount, dragons }) => {
+                    return dragonCount > 0 ? dragonCount : Object.values(dragons).filter((z) => !!z).length;
+                },
+                undefined,
+                { max: 8 }
+            ),
+
+            new LayoutNumberCell("bossCount", "bossCount", ({ bossCount }) => bossCount, undefined, { max: 100 }),
+            new LayoutNumberCell(
+                "checkCount",
+                "checkCount",
+                ({ checkCount, events, dragons }) => {
+                    return checkCount > 0
+                        ? checkCount
+                        : Object.values({ ...events, ...dragons }).filter((z) => !!z).length;
+                },
+                undefined,
+                { max: 100 }
+            ),
+            new LayoutNumberCell("chestCount", "chestCount", ({ chestCount }) => chestCount, undefined, {
+                max: 255,
+            }),
+        ]),
+    ],
+];
+
+export const colLayout = [
+    [
+        /*********************** ROW 3 ***********************/
+        new LayoutGroup("characterCount", "flex-start", [
+            new LayoutNumberCell(
+                "characterCount",
+                "characterCount",
+                ({ characters, characterCount }) => {
+                    return characterCount > 0 ? characterCount : Object.values(characters).filter((z) => !!z).length;
+                },
+                undefined,
+                {
+                    min: 1,
+                    max: 14,
+                }
+            ),
+        ]),
+        new LayoutGroup("esperCount", "flex-start", [
+            new LayoutNumberCell(
+                "esperCount",
+                "esperCount",
+                ({ esperCount }) => {
+                    return esperCount;
+                },
+                undefined,
+                {
+                    max: 27,
+                }
+            ),
+        ]),
+        new LayoutGroup("dragonCount", "flex-start", [
+            new LayoutNumberCell(
+                "dragonCount",
+                "dragonCount",
+                ({ dragonCount, dragons }) => {
+                    return dragonCount > 0 ? dragonCount : Object.values(dragons).filter((z) => !!z).length;
+                },
+                undefined,
+                { max: 8 }
+            ),
+        ]),
+        new LayoutGroup("checkCount", "flex-start", [
+            new LayoutNumberCell(
+                "checkCount",
+                "checkCount",
+                ({ checkCount, events, dragons }) => {
+                    return checkCount > 0
+                        ? checkCount
+                        : Object.values({ ...events, ...dragons }).filter((z) => !!z).length;
+                },
+                undefined,
+                { max: 100 }
+            ),
+        ]),
+        new LayoutGroup("bossCount", "flex-start", [
+            new LayoutNumberCell("bossCount", "bossCount", ({ bossCount }) => bossCount, undefined, { max: 100 }),
+        ]),
+
+        new LayoutGroup("chestCount", "flex-start", [
+            new LayoutNumberCell("chestCount", "chestCount", ({ chestCount }) => chestCount, undefined, {
+                max: 255,
+            }),
+        ]),
+    ],
+];
+
 type Cell = LayoutCell | LayoutNumberCell;
 export const getCell = (key: string) => {
     const c = condenseLayout.reduce<Cell | null>((acc, groups, idx) => {

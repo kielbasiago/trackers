@@ -1,4 +1,4 @@
-import { TrackerFont, TrackerMode, TrackerBackground, TrackerThemeMode } from "./AnguirelTracker/types";
+import { TrackerFont, TrackerMode, TrackerBackground, TrackerThemeMode, LayoutTypes } from "./AnguirelTracker/types";
 import { useLocation } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { TrackerSettings, TrackerSettingsContext, useTrackerSettings } from "./settings/settings";
@@ -23,6 +23,7 @@ export const AppSettingsProvider: React.FC<Props> = (props) => {
     const qsBackground = useQuery("background");
     const qsThemeMode = useQuery("themeMode");
     const qsShowHeader = useQuery("showHeader");
+    const qsLayoutType = useQuery("layoutType");
     const nav = useNavigate();
     const location = useLocation();
     const [raw] = useState(
@@ -30,10 +31,11 @@ export const AppSettingsProvider: React.FC<Props> = (props) => {
         JSON.stringify({
             font: TrackerFont.DEFAULT,
             mode: TrackerMode.AUTO,
-            background: TrackerBackground.ANGUIREL,
+            background: TrackerBackground.TRANSPARENT,
             themeMode: TrackerThemeMode.DARK,
             characterTag: true,
             showHeader: true,
+            layoutType: LayoutTypes.threeByTwo,
         } as TrackerSettings)
     );
 
@@ -44,6 +46,7 @@ export const AppSettingsProvider: React.FC<Props> = (props) => {
     );
 
     const [showHeader, setShowHeader] = useState<boolean>(qsShowHeader === "false" ? false : defaults.showHeader);
+    const [layoutType, setLayoutType] = useState<LayoutTypes>((qsLayoutType as LayoutTypes) || LayoutTypes.threeByTwo);
 
     const [font, setFont] = useState<TrackerFont>((qsFont?.toUpperCase() as TrackerFont) ?? defaults.font);
     const [mode, setMode] = useState<TrackerMode>((qsMode?.toUpperCase() as TrackerMode) ?? defaults.mode);
@@ -62,6 +65,7 @@ export const AppSettingsProvider: React.FC<Props> = (props) => {
             background,
             themeMode,
             showHeader,
+            layoutType,
         } as TrackerSettings;
         const searchVals = Object.keys(val).map((key) => {
             return `${key}=${val[key as keyof typeof val]}`;
@@ -74,7 +78,7 @@ export const AppSettingsProvider: React.FC<Props> = (props) => {
                 replace: true,
             });
         }
-    }, [characterTag, font, mode, background, themeMode]);
+    }, [characterTag, font, mode, background, themeMode, layoutType, showHeader]);
 
     useEffect(() => {
         onThemeUpdate(font, themeMode);
@@ -95,6 +99,8 @@ export const AppSettingsProvider: React.FC<Props> = (props) => {
                 setThemeMode,
                 showHeader,
                 setShowHeader,
+                layoutType,
+                setLayoutType,
             }}
         >
             {children}

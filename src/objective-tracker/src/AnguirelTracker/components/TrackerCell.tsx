@@ -75,7 +75,7 @@ export function TrackerCell(props: Props): JSX.Element {
             clsx(isAvailable || "gated-cell", completed || "inactive-cell", completed && "complete-cell"),
             "",
             null,
-            { min: 0, max: 1, value: Number.isFinite(value) ? value || 0 : 0 }
+            { min: 0, max: 1, value: value as number }
         );
     } else if (cell instanceof LayoutNumberCell) {
         const [key, displayName, callback, gated, options = { min: undefined, max: undefined }] = cell.args;

@@ -12,7 +12,7 @@ import "./AnguirelTracker.scss";
 import TrackerHeader from "./components/TrackerHeader";
 import { getTrackerDefaults, TrackerContext } from "./components/TrackerProvider";
 import { layout } from "./layout";
-import { renderLayout } from "./layoutRender";
+import { RenderLayout } from "./layoutRender";
 import { TrackerMode } from "./types";
 
 type Props = Record<string, unknown>;
@@ -82,8 +82,6 @@ export function AnguirelTracker(props: Props): JSX.Element {
         })();
     }, [qb, initialized, sendRequest]);
 
-    const RenderedLayout = renderLayout(layout);
-
     return (
         <TrackerContext.Provider value={providerData}>
             <Paper
@@ -99,7 +97,7 @@ export function AnguirelTracker(props: Props): JSX.Element {
             >
                 {showHeader ? <TrackerHeader /> : null}
                 <div style={{ position: "relative" }}>
-                    {RenderedLayout}
+                    <RenderLayout layout={layout} />
                     {session.status === "CONNECTED" || mode === TrackerMode.MANUAL ? null : (
                         <div className="overlay overlay-background">
                             <Typography>{last(session.logMessages)}</Typography>

@@ -85,7 +85,7 @@ export function TrackerHeader(props: Props): JSX.Element {
         </div>
     );
 
-    const hideItems = ".tracker-header, .tracker-log { display: none }";
+    const hideItems = ".tracker-header, .tracker-log, .tracker-options { display: none }";
     const bg = ".tracker-background { background: transparent }";
 
     const customCss = (

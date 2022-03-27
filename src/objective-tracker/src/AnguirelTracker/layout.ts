@@ -209,7 +209,7 @@ const layout = [
                 "characterCount",
                 "characterCount",
                 ({ characters, characterCount }) => {
-                    return characterCount > 0 ? characterCount : Object.values(characters).filter((z) => !!z).length;
+                    return Object.values(characters).filter((z) => !!z).length;
                 },
                 undefined,
                 {

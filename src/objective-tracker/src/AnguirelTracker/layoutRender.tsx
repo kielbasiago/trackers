@@ -3,9 +3,13 @@ import flatten from "lodash/flatten";
 import TrackerCell from "./components/TrackerCell";
 import TrackerGroup from "./components/TrackerGroup";
 import TrackerRow from "./components/TrackerRow";
+import { LayoutTypes } from "./types";
+import { useTrackerSettings } from "../settings/settings";
 
-export function renderLayout(layout: Array<Array<LayoutGroup>>) {
-    return flatten(
+export function RenderLayout(props: { layout: Array<Array<LayoutGroup>> }) {
+    const { layout } = props;
+    const { layoutType } = useTrackerSettings();
+    const vals = flatten(
         layout.map((layout, layoutIndex) => {
             const $groups = layout.map((group) => {
                 const [groupName, _, cells] = group.args;
@@ -19,8 +23,13 @@ export function renderLayout(layout: Array<Array<LayoutGroup>>) {
                     </TrackerGroup>
                 );
             });
-
-            return <TrackerRow key={layoutIndex}>{$groups}</TrackerRow>;
+            return (
+                <TrackerRow col={layoutType === LayoutTypes.vertical} key={layoutIndex}>
+                    {$groups}
+                </TrackerRow>
+            );
         })
     );
+
+    return <>{vals}</>;
 }

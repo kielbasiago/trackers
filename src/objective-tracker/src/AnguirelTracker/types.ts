@@ -108,3 +108,9 @@ export type TrackerContextData = {
     updateValue: (key: string, value: any) => GetSaveDataResponse;
     updateData: (data: GetSaveDataResponse) => void;
 };
+
+export enum LayoutTypes {
+    threeByTwo = "3x2",
+    horizontal = "horizontal",
+    vertical = "vertical",
+}

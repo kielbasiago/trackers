@@ -1,7 +1,7 @@
-import { Paper, TextField, Typography } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Paper, Select, TextField, Typography } from "@mui/material";
 import clsx from "clsx";
 import last from "lodash/last";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GetSaveDataQuery } from "../queries/GetSaveDataQuery";
 import { useTrackerSettings } from "../settings/settings";
 import { QueryBuilder } from "../tracker/QueryBuilder";
@@ -11,10 +11,9 @@ import { useTrackerData } from "../utils/useTrackerData";
 import "./AnguirelTracker.scss";
 import TrackerHeader from "./components/TrackerHeader";
 import { getTrackerDefaults, TrackerContext } from "./components/TrackerProvider";
-import { condenseLayout } from "./condenseLayout";
-import { layout } from "./layout";
-import { renderLayout } from "./layoutRender";
-import { TrackerMode } from "./types";
+import { colLayout, condenseLayout, rowLayout } from "./condenseLayout";
+import { RenderLayout } from "./layoutRender";
+import { LayoutTypes, TrackerMode } from "./types";
 
 type Props = Record<string, unknown>;
 
@@ -25,7 +24,7 @@ export function AnguirelTrackerSimple(props: Props): JSX.Element {
     const [initializing, setInitializing] = useState(false);
 
     const [trackerData, setTrackerData] = useState(getTrackerDefaults());
-    const { mode, background, themeMode, showHeader } = useTrackerSettings();
+    const { mode, background, themeMode, showHeader, setLayoutType, layoutType } = useTrackerSettings();
 
     const providerData = useTrackerData({
         mode,
@@ -86,7 +85,21 @@ export function AnguirelTrackerSimple(props: Props): JSX.Element {
         })();
     }, [qb, initialized, sendRequest, mode]);
 
-    const RenderedLayout = renderLayout(condenseLayout);
+    let layout: typeof condenseLayout | typeof rowLayout | typeof colLayout;
+
+    switch (layoutType) {
+        case LayoutTypes.threeByTwo:
+            layout = condenseLayout;
+            break;
+        case LayoutTypes.horizontal:
+            layout = rowLayout;
+            break;
+        case LayoutTypes.vertical:
+            layout = colLayout;
+            break;
+        default:
+            layout = condenseLayout;
+    }
 
     return (
         <TrackerContext.Provider value={providerData}>
@@ -102,14 +115,34 @@ export function AnguirelTrackerSimple(props: Props): JSX.Element {
                 className={clsx(`theme-${background}`, `theme-mode-${themeMode} tracker-background`)}
             >
                 {showHeader ? <TrackerHeader /> : null}
-                <div style={{ position: "relative" }}>
-                    {RenderedLayout}
+                {showHeader ? (
+                    <div className={"tracker-options"} style={{ marginTop: 8, paddingLeft: 16, paddingRight: 16 }}>
+                        <FormControl fullWidth>
+                            <InputLabel id="tracker-mode-select-label">Layout Mode</InputLabel>
+                            <Select
+                                labelId="tracker-mode-select-label"
+                                id="tracker-mode-select"
+                                value={layoutType}
+                                label="Layout"
+                                variant="standard"
+                                onChange={(a) => setLayoutType(a.target.value as unknown as LayoutTypes)}
+                            >
+                                <MenuItem value={LayoutTypes.threeByTwo}>3x2</MenuItem>
+                                <MenuItem value={LayoutTypes.horizontal}>Horizontal</MenuItem>
+                                <MenuItem value={LayoutTypes.vertical}>Vertical</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </div>
+                ) : null}
+                <div style={{ position: "relative", marginTop: 16 }}>
+                    <RenderLayout layout={layout} />
                     {session.status === "CONNECTED" || mode === TrackerMode.MANUAL ? null : (
                         <div className="overlay overlay-background">
                             <Typography>{last(session.logMessages)}</Typography>
                         </div>
                     )}
                 </div>
+
                 <TextField
                     disabled
                     multiline
