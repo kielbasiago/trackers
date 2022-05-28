@@ -68,7 +68,7 @@ export const SPELLS = Object.entries(spells).map(([key, value]) => {
 });
 
 export const GROUPS = {
-    Black: SPELLS.slice(0, 23),
-    Gray: SPELLS.slice(24, 44),
-    White: SPELLS.slice(45, 53),
+    Black: SPELLS.slice(0, 24),
+    Gray: SPELLS.slice(24, 45),
+    White: SPELLS.slice(45, 54),
 };

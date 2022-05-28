@@ -55,7 +55,7 @@ function App() {
                         </AppSettingsProvider>
                     }
                 />
-                <Route path="/rewards" element={<CheckPicker />} />
+                <Route path="/checks" element={<CheckPicker />} />
                 <Route path="/spells" element={<SpellPicker />} />
             </Routes>
         </ThemeProvider>
