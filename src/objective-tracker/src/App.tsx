@@ -7,6 +7,8 @@ import ThemeProvider from "@mui/system/ThemeProvider";
 import { createTheme, Theme, ThemeOptions } from "@mui/material";
 import { normalFontTheme, ff6FontTheme } from "./settings/settings";
 import { useLocation } from "react-router-dom";
+import { CheckPicker } from "./ForceChecks/CheckPicker";
+import { SpellPicker } from "./SpellPicker/SpellPicker";
 
 const AnguirelTracker = React.lazy(() => import("./AnguirelTracker/AnguirelTracker"));
 const AnguirelTrackerSimple = React.lazy(() => import("./AnguirelTracker/AnguirelTrackerSimple"));
@@ -36,12 +38,26 @@ function App() {
 
     return (
         <ThemeProvider theme={theme}>
-            <AppSettingsProvider onThemeUpdate={(font, themeMode) => onThemeUpdate(font, themeMode)}>
-                <Routes>
-                    <Route path="/" element={<AnguirelTracker />} />
-                    <Route path="/simple" element={<AnguirelTrackerSimple />} />
-                </Routes>
-            </AppSettingsProvider>
+            <Routes>
+                <Route
+                    path="/"
+                    element={
+                        <AppSettingsProvider onThemeUpdate={(font, themeMode) => onThemeUpdate(font, themeMode)}>
+                            <AnguirelTracker />
+                        </AppSettingsProvider>
+                    }
+                />
+                <Route
+                    path="/simple"
+                    element={
+                        <AppSettingsProvider onThemeUpdate={(font, themeMode) => onThemeUpdate(font, themeMode)}>
+                            <AnguirelTrackerSimple />
+                        </AppSettingsProvider>
+                    }
+                />
+                <Route path="/rewards" element={<CheckPicker />} />
+                <Route path="/spells" element={<SpellPicker />} />
+            </Routes>
         </ThemeProvider>
     );
 }
