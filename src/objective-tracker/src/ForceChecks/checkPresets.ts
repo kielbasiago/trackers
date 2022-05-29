@@ -1,3 +1,4 @@
+import { TransferListPreset } from "../TransferList/types";
 import {
     ANCIENT_CASTLE,
     AUCTION1,
@@ -24,14 +25,8 @@ import {
     SOUTH_FIGARO_PRISONER,
     TZEN_THIEF,
 } from "./checks";
-import { NameBit } from "./NameBit";
 
-export type CheckPreset = {
-    name: string;
-    description: string;
-    value: NameBit[];
-};
-export const checkPresets: CheckPreset[] = [
+export const checkPresets: TransferListPreset[] = [
     {
         name: "No Free Progression",
         description:

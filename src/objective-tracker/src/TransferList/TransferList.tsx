@@ -18,8 +18,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { NameBit } from "../ForceChecks/NameBit";
-import { CheckPreset, checkPresets } from "../ForceChecks/nfpPresets";
-import { TransferListGroup } from "./types";
+import { TransferListGroup, TransferListPreset } from "./types";
 
 const StyledContainer = styled(Paper)`
     border-radius: 0;
@@ -29,11 +28,12 @@ const StyledContainer = styled(Paper)`
 type TransferListProps = {
     category: string;
     groups: TransferListGroup;
+    presets: TransferListPreset[];
     title: string;
     items: NameBit[];
 };
 
-export default function TransferList({ category, groups, items, title }: TransferListProps) {
+export default function TransferList({ category, groups, items, presets, title }: TransferListProps) {
     const [checked, setChecked] = React.useState<NameBit[]>([]);
     const [left, setLeft] = React.useState<NameBit[]>(items);
     const [right, setRight] = React.useState<NameBit[]>([]);
@@ -286,26 +286,26 @@ export default function TransferList({ category, groups, items, title }: Transfe
         );
     };
 
-    const [preset, setPreset] = useState<CheckPreset | null>(null);
+    const [preset, setPreset] = useState<TransferListPreset | null>(null);
 
     return (
         <StyledContainer>
             <FormControl fullWidth>
                 <InputLabel id="preset-select-label">Presets</InputLabel>
-                <Select<CheckPreset | null>
+                <Select<TransferListPreset | null>
                     labelId="preset-select-label"
                     id="preset-select"
                     value={preset}
                     label="Presets"
                     onChange={(e, child) => {
-                        const val = e.target.value as unknown as CheckPreset;
+                        const val = e.target.value as unknown as TransferListPreset;
                         setPreset(val);
-                        const newSelected = val.value.map((bit) => bit.value);
+                        const newSelected = val.value.map(({ value }) => value);
                         setSelected(newSelected.join(","));
                         updateValues(newSelected);
                     }}
                 >
-                    {checkPresets.map((p) => (
+                    {presets.map((p) => (
                         <MenuItem key={p.name} value={p as unknown as any}>
                             {p.name}
                         </MenuItem>
